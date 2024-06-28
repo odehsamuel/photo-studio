@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .signup-input {
+    @apply w-full py-0.5 pl-1 outline-none border rounded-md text-slate-700;
+  }
+
+  .hamburger__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 3rem;
+    height: 2rem;
+  }
+
+  .hamburger-item {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #ebe6e6;
+  }
+
+  .navigations {
+    display: none;
+  }
+
+  .backlight {
+    display: none;
+    background-color: rgba(34, 34, 34, 0.6);
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+}
+
+.cancel-btn {
+    margin: 0.25rem auto 0 0.75rem;
+}
+
+.sidebar{
+    display: none;
+    background-color: #e3e0e0;
+    color: #813d3d;
+    position: fixed;
+    z-index: 3;
+    left: 25%;
+    width: 100vw;
+    height: 100vh;
+}
+
+  @media (min-width: 40rem) {
+    .hamburger__container {
+        display: none;
+    }
+    .navigations {
+        display: flex;
+    }
+  }
+}

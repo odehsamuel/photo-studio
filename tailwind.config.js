@@ -10,7 +10,14 @@ module.exports = {
       lg: '976px',
       xl: '1440px',
     },
-    extend: {},
+    extend: {
+      spacing : {
+        vsm: '2px',
+        thrqrt: '75%',
+        scr: '100vh',
+        scrw: '100vw'
+      }
+    },
   },
   plugins: [],
 }

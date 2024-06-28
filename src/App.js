@@ -1,16 +1,25 @@
-// import "./App.css";
 import "./index.css";
-import Header from "./components/Header";
-import ImageList from "./components/ImageList";
-import {ImagesContextProvider} from "./context/ImagesContext/ImagesContext";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ImagesContextProvider } from "./context/ImagesContext/ImagesContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
+import SignUp from "./components/pages/SignUp";
+import NotFound from "./components/pages/NotFound";
 
 function App() {
   return (
     <ImagesContextProvider>
-      <div className="h-full w-full bg-slate-800">
-        <Header />
-        <ImageList />
-      </div>
+      <Router>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/not-found" element={<NotFound />} />
+          </Routes>
+        <ToastContainer />
+      </Router>
     </ImagesContextProvider>
   );
 }

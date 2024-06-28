@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import ImagesContext from "../context/ImagesContext/ImagesContext";
+import { toast } from "react-toastify";
 
 const SearchBar = () => {
   const { SearchImage } = useContext(ImagesContext);
@@ -8,7 +9,9 @@ const SearchBar = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (enteredData === "") {
-      console.log("pls enter a text you want to search");
+      toast.error("pls enter a text you want to search", {
+        style: {color: "red"}
+      });
     } else {
       SearchImage(enteredData);
     }
