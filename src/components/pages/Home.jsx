@@ -3,7 +3,7 @@ import ImageList from "../ImageList";
 
 function Home() {
   return (
-    <div className="h-full w-full bg-slate-800 ">
+    <div className="h-full w-full bg-slate-800 relative">
 
       <div className="sidebar">
         <i

@@ -7,6 +7,8 @@ import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import SignUp from "./components/pages/SignUp";
 import NotFound from "./components/pages/NotFound";
+import ForgottenPassword from "./components/pages/ForgottenPassword";
+import ImagePreview from "./components/pages/ImagePreview";
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgottenPassword />} />
             <Route path="/not-found" element={<NotFound />} />
+            <Route path="/image-preview" element={<ImagePreview />} />
           </Routes>
         <ToastContainer />
       </Router>

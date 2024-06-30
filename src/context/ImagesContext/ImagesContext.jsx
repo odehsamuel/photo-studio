@@ -38,7 +38,7 @@ export const ImagesContextProvider = ({ children }) => {
     }
 
     const shuffledArray = shuffleArray([...mergedArray]);
-    // const count = shuffledArray.slice(0, 10);
+    const count = shuffledArray.slice(0, 12);
 
     // function fetchNextImages() {
     //   if (count) {
@@ -48,7 +48,7 @@ export const ImagesContextProvider = ({ children }) => {
 
     dispatch({
       type: "FETCH_IMAGES",
-      payload: shuffledArray,
+      payload: count,
     });
   }
 
@@ -69,9 +69,7 @@ export const ImagesContextProvider = ({ children }) => {
     });
   }
 
-  function OpenBackdropAndSidebar() {
-    
-  }
+  function OpenBackdropAndSidebar() {}
 
   return (
     <ImagesContext.Provider

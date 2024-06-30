@@ -18,8 +18,8 @@ const ImageList = () => {
     );
   } else {
     return (
-      <>
-        <div className="mt-8 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 items-center justify-items-center mx-12">
+      <div className="absolute top-96 mx-auto">
+        <div className=" grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 items-center pt-8 justify-items-center mx-12">
           {images.map((image) => (
             <Image image={image} key={image.id} />
           ))}
@@ -31,7 +31,7 @@ const ImageList = () => {
           <li className="px-1">4</li>
           <i class="fa fa-arrow-right" aria-hidden="true"></i>
         </ul>
-      </>
+      </div>
     );
   }
 };
