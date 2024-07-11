@@ -99,8 +99,8 @@ function Login() {
   }
 
   return (
-    <div className="bg-slate-50 fixed w-full h-screen">
-      <div className="ml-4 mt-2 ">
+    <div className="bg-slate-50 w-full h-screen">
+      <div className="ml-4 pt-2 ">
         <NavLink to="/">
           <CameraLogo fill = {"black"}/>
         </NavLink>

@@ -8,7 +8,11 @@
   }
 
   .signup-input {
-    @apply w-full py-0.5 pl-1 outline-none border rounded-md text-slate-700;
+    @apply w-full py-0.5 px-1 outline-none border rounded-md text-slate-700;
+  }
+
+  .upload-input {
+    @apply w-80 py-0.5 px-1 outline-none border rounded-md text-slate-700 block
   }
 
   .hamburger__container {

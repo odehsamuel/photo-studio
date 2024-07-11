@@ -9,16 +9,23 @@ import ImageCarousel from "./ImageCarousel";
 const Header = () => {
   const { OpenBackdropAndSidebar } = useContext(ImagesContext);
   const [loggedIn, setLoggedIn] = useState(true);
+  const [isactive, setIsactive] = useState(false)
 
   const navigate = useNavigate();
   const auth = getAuth();
 
+  
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
       if (user) setLoggedIn(user);
       else setLoggedIn(false);
-      console.log(user);
+      // console.log(user);
     });
+    
+    // window.addEventListener("scroll", handleScroll)
+    window.addEventListener ("scroll",(e) => {
+      // console.log(e);
+  })
     return () => unSubscribe();
   }, []);
 
@@ -29,7 +36,7 @@ const Header = () => {
 
   return (
     <div className="relative">
-      <div className="py-2 px-4 flex justify-between items-center flex-grow absolute z-10 w-full">
+      <div className="py-2 px-4 flex justify-between items-center flex-grow fixed z-10 w-full">
         <NavLink to="/">
           <CameraLogo fill={"#c5c3c3"}/>
         </NavLink>
@@ -56,7 +63,7 @@ const Header = () => {
             </NavLink>
           )}
 
-          <NavLink to={"/sign-up"}>
+          <NavLink to={loggedIn ? "/image-upload" : "/sign-up"}>
             <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
               <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
               Upload

@@ -9,6 +9,7 @@ import SignUp from "./components/pages/SignUp";
 import NotFound from "./components/pages/NotFound";
 import ForgottenPassword from "./components/pages/ForgottenPassword";
 import ImagePreview from "./components/pages/ImagePreview";
+import ImageUpload from "./components/pages/ImageUpload";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgottenPassword />} />
-            <Route path="/not-found" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/image-upload" element={<ImageUpload />} />
             <Route path="/image-preview" element={<ImagePreview />} />
           </Routes>
         <ToastContainer />

@@ -107,8 +107,8 @@ function SignUp() {
   }
 
   return (
-    <div className="bg-slate-50 fixed w-full h-full">
-      <div className="ml-4 mt-2">
+    <div className="bg-slate-50 w-screen h-screen">
+      <div className="ml-4 pt-2">
         <NavLink to="/">
           <CameraLogo/>
         </NavLink>

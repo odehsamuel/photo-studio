@@ -1,5 +1,14 @@
 import { createContext, useReducer } from "react";
 import ImagesReducer from "./ImagesReducer";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase.config";
 
 const ImagesContext = createContext();
 
@@ -24,7 +33,6 @@ export const ImagesContextProvider = ({ children }) => {
     const secondArray = data2["hits"];
 
     const mergedArray = hits.concat(secondArray);
-    // console.log(mergedArray);
     // const {hits} = await response.json();
 
     function shuffleArray(mergedArray) {
@@ -63,9 +71,20 @@ export const ImagesContextProvider = ({ children }) => {
 
     const { hits } = await response.json();
 
+    // const q = query(imageRef, where("tags","array-contains",`${params}`), orderBy("timestamp", "desc"), limit(10))
+
+     let images = []
+    const querySnapshot = await getDocs(collection(db, "images"), where("tags","array-contains",`${params}`), orderBy("timestamp", "desc"), limit(10));
+    querySnapshot.forEach((doc) => {
+      images.push({
+        id: doc.id,
+        ...doc.data()
+      })
+    });
+    const newImages = [...images,...hits]
     dispatch({
       type: "GET_IMAGES",
-      payload: hits,
+      payload: newImages,
     });
   }
 
