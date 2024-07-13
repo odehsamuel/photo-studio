@@ -40,7 +40,6 @@ function SignUp() {
       toast.error("Pls enter all credentials", {
         style: { color: "red" },
       });
-      console.log();
     } else if (e.target[2].value.length < 8) {
       toast.error("Password shouldn't be less than 8 characters", {
         style: { color: "red" },
@@ -107,8 +106,8 @@ function SignUp() {
   }
 
   return (
-    <div className="bg-slate-50 w-screen h-screen">
-      <div className="ml-4 pt-2">
+    <div className="bg-slate-50 w-screen h-screen px-4">
+      <div className="pt-2 mb-4 h-12 w-12">
         <NavLink to="/">
           <CameraLogo/>
         </NavLink>

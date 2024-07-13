@@ -3,8 +3,8 @@ import { CameraLogo } from "../Mode/CameraLogo";
 
 function NotFound() {
   return (
-    <div className="h-screen w-screen bg-slate-800">
-      <div className="ml-4 pt-2">
+    <div className="h-screen w-screen bg-slate-800 px-4">
+      <div className="pt-2 mb-4 h-12 w-12">
         <NavLink to="/">
           <CameraLogo fill={"#c5c3c3"}/>
         </NavLink>

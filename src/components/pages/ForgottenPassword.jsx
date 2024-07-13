@@ -29,8 +29,8 @@ function ForgottenPassword() {
   }
 
   return (
-    <div className="bg-slate-50 fixed w-screen h-screen">
-      <div className="ml-4 pt-2">
+    <div className="bg-slate-50 fixed w-screen h-screen px-4">
+      <div className="pt-2 mb-4 h-12 w-12">
         <NavLink to="/">
           <CameraLogo/>
         </NavLink>

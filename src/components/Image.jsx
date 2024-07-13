@@ -23,6 +23,8 @@ const Image = ({
         downloads: +downloads + 1,
       });
       setDownloaded(true);
+    }else{
+      saveAs(previewURL, `${webformatURL.substr(24)}`);
     }
   }
   async function handleClick(e) {
@@ -44,6 +46,10 @@ const Image = ({
           downloads: +downloads + 1,
         });
       }
+    }else if(e.target.classList.contains("fa-heart-o")){
+      setLiked(!liked);
+    }else if(e.target.classList.contains("fa-heart")){
+      setLiked(!liked)
     }
   }
 

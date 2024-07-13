@@ -31,7 +31,6 @@ const Header = () => {
 
   function handleClick() {
     auth.signOut();
-    console.log("logged out");
   }
 
   return (
@@ -57,7 +56,7 @@ const Header = () => {
             </>
           ) : (
             <NavLink to={"/"} onClick={handleClick}>
-              <li className="border hover:bg-slate-700 rounded-full py-2 w-20 text-center mr-4 text-slate-50">
+              <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
                 Log out
               </li>
             </NavLink>
