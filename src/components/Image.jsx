@@ -2,10 +2,7 @@ import { saveAs } from "file-saver";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  collection,
   doc,
-  getDoc,
-  onSnapshot,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase.config";
@@ -15,10 +12,11 @@ const Image = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
+
   async function downloadImage() {
     if (typeof id == "string") {
       const docRef = doc(db, "images", id);
-      saveAs(previewURL, `${webformatURL.substr(24)}`);
+      saveAs(webformatURL, `${previewURL.substr(24)}`);
       await updateDoc(docRef, {
         downloads: +downloads + 1,
       });
@@ -65,6 +63,7 @@ const Image = ({
         </Link>
         <a
           onClick={downloadImage}
+          download={webformatURL}
           className="hover:bg-rose-300 bg-rose-200 py-0.5 px-1.5 flex items-center rounded-md absolute bottom-3 right-2 cursor-pointer"
         >
           <i className="fa fa-download mr-2" aria-hidden="true"></i>
@@ -106,7 +105,7 @@ const Image = ({
             className={"fa fa-download hover:text-rose-600"}
             aria-hidden="true"
             onClick={(e) => {
-              downloadImage(e);
+              downloadImage();
               handleClick(e);
             }}
           ></i>

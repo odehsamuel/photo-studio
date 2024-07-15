@@ -61,6 +61,7 @@ function ImageUpload() {
       const storageRef = ref(storage, `images/${fileName}`);
 
       const uploadTask = uploadBytesResumable(storageRef, image);
+
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -87,33 +88,37 @@ function ImageUpload() {
             }
           );
         },
-        () => {
+        async function getDownloadedUrl() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("File available at", downloadURL);
             formDetails.webformatURL = downloadURL;
+
+            console.log(formDetails);
+            //add image data to database
+            const formDataCopy = { ...formDetails };
+            delete formDataCopy.tag;
+            delete formDataCopy.image;
+            const tags = tag.split(", ");
+            const formData = { ...formDataCopy, tags };
+            console.log(formData)
+
+            addDoc(collection(db, "images"), {
+              ...formData,
+              likes: 0,
+              comments: 0,
+              downloads: 0,
+              previewURL: `https://photostudio.com/get/${uuidv4()}/.${
+                image.name
+              }`,
+              timestamp: serverTimestamp(),
+            });
+            toast.success("Upload was successful", {
+              style: { color: "green" },
+            });
+            navigate("/");
           });
         }
       );
-
-      //add image data to database
-      const formDataCopy = { ...formDetails };
-      delete formDataCopy.tag;
-      delete formDataCopy.image;
-      const tags = tag.split(", ");
-      const formData = { ...formDataCopy, tags };
-
-      await addDoc(collection(db, "images"), {
-        ...formData,
-        likes: 0,
-        comments: 0,
-        downloads: 0,
-        previewURL: `https://photostudio.com/get/${uuidv4()}/.${image.name}`,
-        timestamp: serverTimestamp(),
-      });
-      toast.success("Upload was successful", {
-        style: { color: "green" },
-      });
-      navigate("/");
     }
   }
 
@@ -126,8 +131,8 @@ function ImageUpload() {
       </div>
       <form
         onSubmit={handleSubmit}
-        accept=""
-        multiple
+        accept=".jpg, .jpeg, .png"
+        // multiple
         required
       >
         <h3 className="font-bold text-slate-700 text-2xl mb-4">
