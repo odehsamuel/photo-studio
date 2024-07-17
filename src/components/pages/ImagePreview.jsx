@@ -3,11 +3,12 @@ import { CameraLogo } from "../Mode/CameraLogo";
 import chick from "../Mode/_g73df6e99215abe2cfd07359c9586141294b101fda48f200514e9c5ef48e71cbc7e8d589167e19a46e84b159ac379e10ce6f4cba3c6c82d003baecea327915664_640.jpg";
 import { useContext, useState } from "react";
 import ImagesContext from "../../context/ImagesContext/ImagesContext";
-import Header from "../Header";
-import ImageList from "../ImageList"
+import Image from "../Image";
 
 function ImagePreview() {
-  // const {image} = useContext(ImagesContext)
+  const { images } = useContext(ImagesContext);
+  const relatedImages = images.slice(0, 6);
+
   const [showDetails, setShowDetails] = useState(false);
 
   function handleChange() {}
@@ -82,7 +83,11 @@ function ImagePreview() {
             </p>
           </ul>
         </div>
-        <ImageList/>
+      </div>
+      <div className="flex flex-grow items-center pt-8 justify-items-center mx-12">
+        {relatedImages.map((image) => (
+          <Image image={image} key={image.id} />
+        ))}
       </div>
     </div>
   );

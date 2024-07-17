@@ -14,6 +14,9 @@ module.exports = {
       spacing : {
         vsm: '2px',
         thrqrt: '75%',
+        half: "42%",
+        hlf: "45%",
+        oneqrt: "28%",
         scr: '100vh',
         scrw: '100vw'
       }

@@ -10,20 +10,23 @@ import NotFound from "./components/pages/NotFound";
 import ForgottenPassword from "./components/pages/ForgottenPassword";
 import ImagePreview from "./components/pages/ImagePreview";
 import ImageUpload from "./components/pages/ImageUpload";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <ImagesContextProvider>
       <Router>
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgottenPassword />} />
-            <Route path="*" element={<NotFound />} />
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgottenPassword />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/image-upload" element={<PrivateRoute />}>
             <Route path="/image-upload" element={<ImageUpload />} />
-            <Route path="/image-preview" element={<ImagePreview />} />
-          </Routes>
+          </Route>
+          <Route path="/image-preview" element={<ImagePreview />} />
+        </Routes>
         <ToastContainer />
       </Router>
     </ImagesContextProvider>

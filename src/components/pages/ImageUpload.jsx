@@ -93,14 +93,12 @@ function ImageUpload() {
             console.log("File available at", downloadURL);
             formDetails.webformatURL = downloadURL;
 
-            console.log(formDetails);
             //add image data to database
             const formDataCopy = { ...formDetails };
             delete formDataCopy.tag;
             delete formDataCopy.image;
             const tags = tag.split(", ");
             const formData = { ...formDataCopy, tags };
-            console.log(formData)
 
             addDoc(collection(db, "images"), {
               ...formData,

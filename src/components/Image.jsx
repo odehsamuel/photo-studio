@@ -1,10 +1,7 @@
 import { saveAs } from "file-saver";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 
 const Image = ({
@@ -16,13 +13,14 @@ const Image = ({
   async function downloadImage() {
     if (typeof id == "string") {
       const docRef = doc(db, "images", id);
-      saveAs(webformatURL, `${previewURL.substr(24)}`);
+      setDownloaded(true);
+      saveAs(webformatURL, `${previewURL.substr(28)}`);
       await updateDoc(docRef, {
         downloads: +downloads + 1,
       });
+    } else {
+      saveAs(webformatURL, `${previewURL.substr(24)}`);
       setDownloaded(true);
-    }else{
-      saveAs(previewURL, `${webformatURL.substr(24)}`);
     }
   }
   async function handleClick(e) {
@@ -39,15 +37,17 @@ const Image = ({
           likes: +likes,
         });
       } else if (e.target.classList.contains("download")) {
-        setDownloaded(true)
+        setDownloaded(true);
+        saveAs(webformatURL, `${previewURL.substr(24)}`);
         updateDoc(docRef, {
           downloads: +downloads + 1,
         });
+        console.log("Downloaded successful!!!!");
       }
-    }else if(e.target.classList.contains("fa-heart-o")){
+    } else if (e.target.classList.contains("fa-heart-o")) {
       setLiked(!liked);
-    }else if(e.target.classList.contains("fa-heart")){
-      setLiked(!liked)
+    } else if (e.target.classList.contains("fa-heart")) {
+      setLiked(!liked);
     }
   }
 
@@ -63,7 +63,7 @@ const Image = ({
         </Link>
         <a
           onClick={downloadImage}
-          download={webformatURL}
+          download={`${previewURL.substr(28)}`}
           className="hover:bg-rose-300 bg-rose-200 py-0.5 px-1.5 flex items-center rounded-md absolute bottom-3 right-2 cursor-pointer"
         >
           <i className="fa fa-download mr-2" aria-hidden="true"></i>
@@ -84,7 +84,6 @@ const Image = ({
 
           <p className="text-xs font-bold text-rose-600">Likes</p>
           <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full">
-            {/* {likes} */}
             {liked ? +likes + 1 : likes}
           </span>
         </div>
@@ -92,7 +91,6 @@ const Image = ({
           <i
             className={"fa fa-comment-o hover:text-rose-600"}
             aria-hidden="true"
-            // onClick={() => setLiked(!liked)}
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Comments</p>
@@ -111,9 +109,7 @@ const Image = ({
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Downloads</p>
-          <span
-            className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full download"
-          >
+          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full download">
             {downloaded ? +downloads + 1 : downloads}
           </span>
         </div>

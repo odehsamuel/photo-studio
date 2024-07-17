@@ -1,43 +1,40 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { CameraLogo } from "./Mode/CameraLogo";
 import SearchBar from "./SearchBar";
 import { useContext, useEffect, useState } from "react";
 import ImagesContext from "../context/ImagesContext/ImagesContext";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import ImageCarousel from "./ImageCarousel";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
 
 const Header = () => {
   const { OpenBackdropAndSidebar } = useContext(ImagesContext);
   const [loggedIn, setLoggedIn] = useState(true);
-  const [isactive, setIsactive] = useState(false)
+  // const [isactive, setIsactive] = useState(false)
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const auth = getAuth();
 
-  
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) setLoggedIn(user);
+    const unSubscribe = onAuthStateChanged(auth, async(user) => {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) setLoggedIn(user);
       else setLoggedIn(false);
-      // console.log(user);
     });
-    
-    // window.addEventListener("scroll", handleScroll)
-    window.addEventListener ("scroll",(e) => {
-      // console.log(e);
-  })
     return () => unSubscribe();
-  }, []);
+  }, [auth]);
 
   function handleClick() {
     auth.signOut();
   }
 
   return (
-    <div className="relative">
+    <div className="absolute">
       <div className="py-2 px-4 flex justify-between items-center flex-grow fixed z-10 w-full">
         <NavLink to="/">
-          <CameraLogo fill={"#c5c3c3"}/>
+          <CameraLogo fill={"#c5c3c3"} />
         </NavLink>
         <SearchBar />
         <ul className="navigations">
@@ -62,7 +59,7 @@ const Header = () => {
             </NavLink>
           )}
 
-          <NavLink to={loggedIn ? "/image-upload" : "/sign-up"}>
+          <NavLink to={"/image-upload"}>
             <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
               <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
               Upload
@@ -78,9 +75,9 @@ const Header = () => {
           <span className="hamburger-item"></span>
         </div>
       </div>
-      <div className="absolute top-0 w-100">
+      {/* <div className="absolute top-0 w-100">
         <ImageCarousel />
-      </div>
+      </div> */}
     </div>
   );
 };

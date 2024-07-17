@@ -1,23 +1,37 @@
+import { useContext } from "react";
+import Footer from "../Footer";
 import Header from "../Header";
+import ImageCarousel from "../ImageCarousel";
 import ImageList from "../ImageList";
+import ImagesContext from "../../context/ImagesContext/ImagesContext";
+import { Loader } from "../Mode/Loader";
 
 function Home() {
-  return (
-    <div className="h-full w-full bg-slate-800 relative">
+  const { loading } = useContext(ImagesContext)
 
-      <div className="sidebar">
-        <i
-          className="fa fa-arrow-circle-o-left cancel-btn fa-2x"
-          aria-hidden="true"
-        ></i>
-        <div className="sidebar-navigation">
-
-        </div>
+  if (loading) {
+    return (
+      <div className="bg-slate-600/70 w-screen h-screen pt-60 px-half md:px-hlf sm:px-oneqrt">
+        <Loader fill={"white"} />
       </div>
-      <Header />
-      <ImageList />
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="h-full w-full bg-slate-800 relative">
+        <div className="sidebar">
+          <i
+            className="fa fa-arrow-circle-o-left cancel-btn fa-2x"
+            aria-hidden="true"
+          ></i>
+          <div className="sidebar-navigation"></div>
+        </div>
+        <Header />
+        <ImageCarousel />
+        <ImageList />
+        <Footer />
+      </div>
+    );
+  }
 }
 
 export default Home;

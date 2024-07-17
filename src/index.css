@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  /* body {
     background-color: #121212;
-  }
+  } */
 
   .signup-input {
     @apply w-full py-0.5 px-1 outline-none border rounded-md text-slate-700;

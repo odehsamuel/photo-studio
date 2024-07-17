@@ -67,14 +67,11 @@ function SignUp() {
         await setDoc(doc(db, "users", user.uid), formDetailsCopy);
         navigate("/login");
       } catch (error) {
-        toast.error(
-          "Invalid credentials, try logging in with correct credentials",
-          {
-            style: {
-              color: "red",
-            },
-          }
-        );
+        toast.error("Email already in use, try signing up with another email", {
+          style: {
+            color: "red",
+          },
+        });
         console.log(error);
       }
     }
@@ -97,11 +94,19 @@ function SignUp() {
           timestamp: serverTimestamp(),
         });
         navigate("/login");
-      }else{
-        toast.error("Already signed in, try logging in instead!")
+      } else {
+        toast.error("Already signed in, try logging in instead!", {
+          style: {
+            color: "red",
+          },
+        });
       }
     } catch (error) {
-      toast.error("An error occured with Google sign up");
+      toast.error("An error occured with Google sign up", {
+        style: {
+          color: "red",
+        },
+      });
     }
   }
 
@@ -109,7 +114,7 @@ function SignUp() {
     <div className="bg-slate-50 w-screen h-screen px-4">
       <div className="pt-2 mb-4 h-12 w-12">
         <NavLink to="/">
-          <CameraLogo/>
+          <CameraLogo />
         </NavLink>
       </div>
 
@@ -182,7 +187,9 @@ function SignUp() {
           <div className="bg-slate-300/70 w-32 h-px my-10"></div>
         </div>
 
-        <p className="text-center text-sm text-slate-600">Sign up instead with</p>
+        <p className="text-center text-sm text-slate-600">
+          Sign up instead with
+        </p>
         <button className="mx-auto block" onClick={handleGoogle}>
           <img
             src={GoogleImage}

@@ -83,12 +83,18 @@ function Login() {
       //     },
       //   });
       if (!docSnap.exists()) {
-        await setDoc(doc(db, "users", user.uid), {
-          email: user.email,
-          timestamp: serverTimestamp(),
+        // await setDoc(doc(db, "users", user.uid), {
+        //   email: user.email,
+        //   timestamp: serverTimestamp(),
+        // });
+        toast.error("Invalid User, try signing up instead pls.", {
+          style: {
+            color: "red",
+          },
         });
+      } else {
+        navigate("/");
       }
-      navigate("/");
     } catch (error) {
       toast.error("Google could not authorize login, try signing up!", {
         style: {
@@ -102,7 +108,7 @@ function Login() {
     <div className="bg-slate-50 w-screen h-screen px-4">
       <div className="pt-2 mb-4 h-12 w-12">
         <NavLink to="/">
-          <CameraLogo fill = {"black"}/>
+          <CameraLogo fill={"black"} />
         </NavLink>
       </div>
       <div className="container bg-slate-100 rounded-lg w-4/5 sm:w-4/5 md:w-3/5 lg:w-5/12 py-4 px-3 mt-6 mx-auto my-auto shadow-xl">

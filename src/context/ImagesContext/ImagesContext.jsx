@@ -33,7 +33,6 @@ export const ImagesContextProvider = ({ children }) => {
     const secondArray = data2["hits"];
 
     const mergedArray = hits.concat(secondArray);
-    // const {hits} = await response.json();
 
     function shuffleArray(mergedArray) {
       for (let i = mergedArray.length - 1; i > 0; i--) {
@@ -47,12 +46,6 @@ export const ImagesContextProvider = ({ children }) => {
 
     const shuffledArray = shuffleArray([...mergedArray]);
     const count = shuffledArray.slice(0, 12);
-
-    // function fetchNextImages() {
-    //   if (count) {
-    //     return count = shuffledArray.slice(11, 20);
-    //   }
-    // }
 
     dispatch({
       type: "FETCH_IMAGES",
@@ -71,10 +64,9 @@ export const ImagesContextProvider = ({ children }) => {
 
     const { hits } = await response.json();
 
-    // const q = query(imageRef, where("tags","array-contains",`${params}`), orderBy("timestamp", "desc"), limit(10))
-
      let images = []
-    const querySnapshot = await getDocs(collection(db, "images"), where("tags","array-contains",`${params}`), orderBy("timestamp", "desc"), limit(10));
+    const querySnapshot = await getDocs(query(collection(db, "images"), where("tags","array-contains",`${text}`), orderBy("timestamp", "desc"), limit(10)));
+    // const querySnapshot = await getDocs(query(collection(db, "images"), or( where("tags","array-contains",`${text}`), where(`${text}`,"in", "description")), orderBy("timestamp", "desc"), limit(10)));
     querySnapshot.forEach((doc) => {
       images.push({
         id: doc.id,
@@ -82,13 +74,24 @@ export const ImagesContextProvider = ({ children }) => {
       })
     });
     const newImages = [...images,...hits]
+
+    function shuffleArray(newImages) {
+      for (let i = newImages.length - 1; i > 0; i--) {
+        // Generate a random index from 0 to i
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap elements array[i] and array[j]
+        [newImages[i], newImages[j]] = [newImages[j], newImages[i]];
+      }
+      return newImages;
+    }
+
+    const shuffledArray = shuffleArray([...newImages]);
+
     dispatch({
       type: "GET_IMAGES",
-      payload: newImages,
+      payload: shuffledArray,
     });
   }
-
-  function OpenBackdropAndSidebar() {}
 
   return (
     <ImagesContext.Provider
@@ -96,7 +99,6 @@ export const ImagesContextProvider = ({ children }) => {
         ...state,
         FetchImages,
         SearchImage,
-        // fetchNextImages,
       }}
     >
       {children}
