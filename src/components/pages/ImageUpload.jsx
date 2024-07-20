@@ -11,6 +11,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase.config";
 import { toast } from "react-toastify";
+import Header from "../Header";
 
 function ImageUpload() {
   const [formDetails, setFormdetails] = useState({
@@ -121,16 +122,18 @@ function ImageUpload() {
   }
 
   return (
-    <div className="bg-slate-50 w-screen h-screen px-4">
-      <div className="pt-2 mb-4 h-12 w-12">
-        <NavLink to="/">
+    <div className="bg-slate-50 w-screen h-screen">
+      {/* <div className="pt-2 mb-4 h-12 w-12"> */}
+      <div className=" pt-2 h-20 mb-4 w-full bg-slate-500 fixed top-0">
+        {/* <NavLink to="/">
           <CameraLogo fill={"black"} />
-        </NavLink>
+        </NavLink> */}
+        <Header/>
       </div>
       <form
         onSubmit={handleSubmit}
         accept=".jpg, .jpeg, .png"
-        // multiple
+        className="px-4 mt-24"
         required
       >
         <h3 className="font-bold text-slate-700 text-2xl mb-4">

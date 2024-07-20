@@ -7,7 +7,8 @@ import ImagesContext from "../../context/ImagesContext/ImagesContext";
 import { Loader } from "../Mode/Loader";
 
 function Home() {
-  const { loading } = useContext(ImagesContext)
+  const date = new Date().getFullYear();
+  const { loading } = useContext(ImagesContext);
 
   if (loading) {
     return (
@@ -29,6 +30,12 @@ function Home() {
         <ImageCarousel />
         <ImageList />
         <Footer />
+        <div className="text-center text-slate-300 bg-slate-700 py-3">
+        Copyright &copy;
+        <span>{date};</span> All rights
+        {/* <script>document.write(new Date().getFullYear());</script> All rights */}
+        reserved
+      </div>
       </div>
     );
   }

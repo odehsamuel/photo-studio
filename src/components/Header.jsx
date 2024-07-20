@@ -16,12 +16,18 @@ const Header = () => {
   const auth = getAuth();
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async(user) => {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) setLoggedIn(user);
-      else setLoggedIn(false);
+    const unSubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && user.uid) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setLoggedIn(user);
+        } else {
+          setLoggedIn(false);
+        }
+      } else {
+        setLoggedIn(false);
+      }
     });
     return () => unSubscribe();
   }, [auth]);
@@ -67,7 +73,7 @@ const Header = () => {
           </NavLink>
         </ul>
         <div
-          className="hamburger__container"
+          className="hamburger__container pr-4"
           onClick={() => OpenBackdropAndSidebar()}
         >
           <span className="hamburger-item"></span>

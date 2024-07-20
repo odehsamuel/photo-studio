@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import Image from "./Image";
 import ImagesContext from "../context/ImagesContext/ImagesContext";
 import Pagination from "./Pagination";
-import Footer from "./Footer";
 
 const ImageList = () => {
   const { images, FetchImages } = useContext(ImagesContext);

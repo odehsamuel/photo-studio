@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       spacing : {
-        vsm: '2px',
+        vsm: '35rem',
         thrqrt: '75%',
         half: "42%",
         hlf: "45%",

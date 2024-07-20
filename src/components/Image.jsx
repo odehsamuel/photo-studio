@@ -19,8 +19,8 @@ const Image = ({
         downloads: +downloads + 1,
       });
     } else {
-      saveAs(webformatURL, `${previewURL.substr(24)}`);
       setDownloaded(true);
+      saveAs(webformatURL, `${previewURL.substr(24)}`);
     }
   }
   async function handleClick(e) {
@@ -28,21 +28,14 @@ const Image = ({
       const docRef = doc(db, "images", id);
       if (e.target.classList.contains("fa-heart-o")) {
         setLiked(!liked);
-        updateDoc(docRef, {
+        await updateDoc(docRef, {
           likes: +likes + 1,
         });
       } else if (e.target.classList.contains("fa-heart")) {
         setLiked(!liked);
-        updateDoc(docRef, {
+        await updateDoc(docRef, {
           likes: +likes,
         });
-      } else if (e.target.classList.contains("download")) {
-        setDownloaded(true);
-        saveAs(webformatURL, `${previewURL.substr(24)}`);
-        updateDoc(docRef, {
-          downloads: +downloads + 1,
-        });
-        console.log("Downloaded successful!!!!");
       }
     } else if (e.target.classList.contains("fa-heart-o")) {
       setLiked(!liked);
@@ -50,11 +43,11 @@ const Image = ({
       setLiked(!liked);
     }
   }
-
   return (
     <div className="container overflow-hidden">
       <div className="relative">
-        <Link to={"/image-preview"}>
+        <Link to={`/image-preview`}>
+          {/* <Link to={`/image-preview/${previewURL.substr(24)}`}> */}
           <img
             src={webformatURL}
             alt="image-preview"
@@ -102,10 +95,7 @@ const Image = ({
           <i
             className={"fa fa-download hover:text-rose-600"}
             aria-hidden="true"
-            onClick={(e) => {
-              downloadImage();
-              handleClick(e);
-            }}
+            onClick={downloadImage}
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Downloads</p>

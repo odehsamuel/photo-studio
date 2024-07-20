@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import ImagesContext from "../context/ImagesContext/ImagesContext";
 
 const Pagination = () => {
+  const { images, FetchImages } = useContext(ImagesContext);
+
+  // useEffect(() => {
+  //   FetchImages();
+  // }, []);
+
   // const [active, setActive] = useState(1);
   const [checked1, setChecked1] = useState(true);
   const [checked2, setChecked2] = useState(false);
