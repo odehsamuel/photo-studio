@@ -25,7 +25,7 @@ function App() {
           <Route path="/image-upload" element={<PrivateRoute />}>
             <Route path="/image-upload" element={<ImageUpload />} />
           </Route>
-          <Route path="/image-preview" element={<ImagePreview />} />
+          <Route path="/image-preview/:id" element={<ImagePreview />} />
         </Routes>
         <ToastContainer />
       </Router>

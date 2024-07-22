@@ -46,7 +46,7 @@ const Image = ({
   return (
     <div className="container overflow-hidden">
       <div className="relative">
-        <Link to={`/image-preview`}>
+        <Link to={`/image-preview/${id}`}>
           {/* <Link to={`/image-preview/${previewURL.substr(24)}`}> */}
           <img
             src={webformatURL}
