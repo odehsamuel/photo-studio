@@ -2,41 +2,48 @@ import { NavLink, useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
 import { CameraLogo } from "../Mode/CameraLogo";
 import canva from "../Mode/icons8-canva-48.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ImagesContext from "../../context/ImagesContext/ImagesContext";
 import Image from "../Image";
 import Footer from "../Footer";
 import Header from "../Header";
+import { db } from "../../firebase.config";
+import { doc, updateDoc } from "firebase/firestore";
 
 function ImagePreview() {
   const date = new Date().getFullYear();
-  // async function downloadImage() {
-  //   // if (typeof id == "string") {
-  //   //   // const docRef = doc(db, "images", id);
-  //   //   setDownloaded(true);
-  //   //   saveAs(webformatURL, `${previewURL.substr(28)}`);
-  //   //   await updateDoc(docRef, {
-  //   //     downloads: +downloads + 1,
-  //   //   });
-  //   // } else {
-  //     setDownloaded(true);
-  //     saveAs(webformatURL, `${previewURL.substr(24)}`);
-  //   // }
-  // }
   const { images } = useContext(ImagesContext);
   const [showDetails, setShowDetails] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const relatedImages = images.slice(0, 7);
 
   const { id } = useParams();
   const [previedImage] = images.filter((image) => image.id == id);
+  async function downloadImage() {
+    if (typeof previedImage.id == "string") {
+      const docRef = doc(db, "images", previedImage.id);
+      setDownloaded(true);
+      saveAs(
+        previedImage.webformatURL,
+        `${previedImage.previewURL.substr(28)}`
+      );
+      await updateDoc(docRef, {
+        downloads: +previedImage.downloads + 1,
+      });
+    } else {
+      setDownloaded(true);
+      saveAs(
+        previedImage.webformatURL,
+        `${previedImage.previewURL.substr(24)}`
+      );
+    }
+  }
 
   const newImages = relatedImages.filter((image) => previedImage !== image);
 
-  function handleChange() {}
-
-  function handleSubmit(e) {
-    e.preventDefault();
-  }
+  // useEffect((event) => {
+  //   event.preventDefault()
+  // },[])
 
   return (
     <div className="bg-slate-50 w-screen h-screen">
@@ -59,7 +66,7 @@ function ImagePreview() {
               className="md:w-80 sm:w-64 md:h-vsm h-96 object-cover mx-auto mt-10"
             />
           </div>
-          <div className="md:justify-evenly w-80 sm:w-98 rounded-2xl py-6 border-2 shadow-md md:font-normal sm:mx-auto">
+          <div className="md:justify-evenly w-80 sm:w-98 mx-auto rounded-2xl py-6 border-2 shadow-md md:font-normal sm:mx-auto">
             <div className="flex my-4 px-6 justify-evenly">
               <a
                 href="https://www.canva.com/"
@@ -73,12 +80,7 @@ function ImagePreview() {
                 Edit Image
               </a>
               <a
-                onClick={() =>
-                  saveAs(
-                    previedImage.webformatURL,
-                    `${previedImage.previewURL.substr(24)}`
-                  )
-                }
+                onClick={downloadImage}
                 className="rounded-full border-2 py-2 px-2.5 md:w-32 sm:w-32 mx-2 text-center bg-green-500 text-sm text-slate-100 cursor-pointer"
               >
                 Download <i className="fa fa-angle-down ml-2"></i>
@@ -131,8 +133,10 @@ function ImagePreview() {
           </div>
         </div>
       )}
-      <h3 className="text-slate-900 md:mt-14 sm:mt-20 mt-20 px-4">RELATED SEARCH</h3>
-      <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-1.5 items-center pt-2 justify-items-center px-4 mb-4">
+      <h3 className="text-slate-900 md:mt-14 sm:mt-20 mt-20 px-4">
+        RELATED SEARCH
+      </h3>
+      <div className="grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 gap-1.5 items-center pt-2 justify-items-center px-4 mb-4">
         {newImages.map((image) => (
           <Image image={image} key={image.id} />
         ))}

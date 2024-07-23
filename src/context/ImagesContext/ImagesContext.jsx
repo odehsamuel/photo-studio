@@ -64,16 +64,23 @@ export const ImagesContextProvider = ({ children }) => {
 
     const { hits } = await response.json();
 
-     let images = []
-    const querySnapshot = await getDocs(query(collection(db, "images"), where("tags","array-contains",`${text}`), orderBy("timestamp", "desc"), limit(10)));
+    let images = [];
+    const querySnapshot = await getDocs(
+      query(
+        collection(db, "images"),
+        where("tags", "array-contains", `${text}`),
+        orderBy("timestamp", "desc"),
+        limit(10)
+      )
+    );
     // const querySnapshot = await getDocs(query(collection(db, "images"), or( where("tags","array-contains",`${text}`), where(`${text}`,"in", "description")), orderBy("timestamp", "desc"), limit(10)));
     querySnapshot.forEach((doc) => {
       images.push({
         id: doc.id,
-        ...doc.data()
-      })
+        ...doc.data(),
+      });
     });
-    const newImages = [...images,...hits]
+    const newImages = [...images, ...hits];
 
     function shuffleArray(newImages) {
       for (let i = newImages.length - 1; i > 0; i--) {

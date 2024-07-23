@@ -63,7 +63,7 @@ const Image = ({
           <p>Download</p>
         </a>
       </div>
-      <div className="bg-rose-200 py-6 px-1 text-slate-700 text-center mx-auto box-border flex justify-evenly">
+      <div className="bg-rose-200 py-6 px-1 text-slate-700 text-center mx-auto box-content flex justify-evenly">
         <div className="">
           <i
             className={
@@ -76,7 +76,7 @@ const Image = ({
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Likes</p>
-          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full">
+          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 rounded-full">
             {liked ? +likes + 1 : likes}
           </span>
         </div>
@@ -87,7 +87,7 @@ const Image = ({
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Comments</p>
-          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full">
+          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 rounded-full">
             {comments}
           </span>
         </div>
@@ -99,7 +99,7 @@ const Image = ({
           ></i>
 
           <p className="text-xs font-bold text-rose-600">Downloads</p>
-          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 mx-4 rounded-full download">
+          <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 rounded-full download">
             {downloaded ? +downloads + 1 : downloads}
           </span>
         </div>

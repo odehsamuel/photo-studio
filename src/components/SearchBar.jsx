@@ -1,20 +1,23 @@
 import { useContext, useState } from "react";
 import ImagesContext from "../context/ImagesContext/ImagesContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const { SearchImage } = useContext(ImagesContext);
   const [enteredData, setEnteredData] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (enteredData === "") {
       toast.error("pls enter a text you want to search", {
-        style: {color: "red"}
+        style: { color: "red" },
       });
     } else {
       SearchImage(enteredData);
-      setEnteredData("")
+      setEnteredData("");
+      navigate("/");
     }
   };
 

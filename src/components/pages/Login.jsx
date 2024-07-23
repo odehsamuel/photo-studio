@@ -114,7 +114,7 @@ function Login() {
       <div className="container bg-slate-100 rounded-lg w-4/5 sm:w-4/5 md:w-3/5 lg:w-5/12 py-4 px-3 mt-6 mx-auto my-auto shadow-xl">
         <form onSubmit={handleSubmit}>
           <h3 className="font-bold text-slate-700 text-2xl mb-4">
-            Welcome back!
+            Welcome back!👋
           </h3>
           <div>
             <label htmlFor="email">Email</label>

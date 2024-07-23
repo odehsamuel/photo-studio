@@ -1,18 +1,17 @@
 import { NavLink } from "react-router-dom";
 import { CameraLogo } from "./Mode/CameraLogo";
 import SearchBar from "./SearchBar";
-import { useContext, useEffect, useState } from "react";
-import ImagesContext from "../context/ImagesContext/ImagesContext";
+import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 
 const Header = () => {
-  const { OpenBackdropAndSidebar } = useContext(ImagesContext);
-  const [loggedIn, setLoggedIn] = useState(true);
-  // const [isactive, setIsactive] = useState(false)
+  const hamburguerButton = document.querySelector(".hamburger__container");
+  const backlightElement = document.querySelector(".backlight");
+  const sidebarElement = document.querySelector(".sidebar");
 
-  // const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(true);
   const auth = getAuth();
 
   useEffect(() => {
@@ -36,9 +35,17 @@ const Header = () => {
     auth.signOut();
   }
 
+  const OpenBackdropAndSidebar = () => {
+    hamburguerButton.addEventListener("click", () => {
+      backlightElement.classList.add("open");
+      sidebarElement.classList.add("open");
+    });
+    console.log("Clicked")
+  };
+
   return (
     <div className="absolute">
-      <div className="py-2 px-4 flex justify-between items-center flex-grow fixed z-10 w-full">
+      <div className="py-2 px-4 flex justify-between items-center flex-grow fixed z-20 w-full">
         <NavLink to="/">
           <CameraLogo fill={"#c5c3c3"} />
         </NavLink>
@@ -73,17 +80,14 @@ const Header = () => {
           </NavLink>
         </ul>
         <div
-          className="hamburger__container pr-4"
-          onClick={() => OpenBackdropAndSidebar()}
+          className="hamburger__container"
+          onClick={OpenBackdropAndSidebar}
         >
           <span className="hamburger-item"></span>
           <span className="hamburger-item"></span>
           <span className="hamburger-item"></span>
         </div>
       </div>
-      {/* <div className="absolute top-0 w-100">
-        <ImageCarousel />
-      </div> */}
     </div>
   );
 };

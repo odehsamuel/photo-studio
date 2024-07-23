@@ -75,7 +75,7 @@ function ImageCarousel() {
         </div>
       )}
       <button
-        className="carousel-control-prev"
+        className="carousel-control-prev z-10"
         type="button"
         data-bs-target="#carouselExampleIndicators"
         data-bs-slide="prev"
@@ -84,7 +84,7 @@ function ImageCarousel() {
         <span className="visually-hidden">Previous</span>
       </button>
       <button
-        className="carousel-control-next"
+        className="carousel-control-next z-10"
         type="button"
         data-bs-target="#carouselExampleIndicators"
         data-bs-slide="next"
