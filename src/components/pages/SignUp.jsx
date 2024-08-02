@@ -12,7 +12,6 @@ import {
 } from "firebase/auth";
 import { db } from "../../firebase.config";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-// import { GoogleAuthProvider } from "firebase/auth";
 
 function SignUp() {
   const [onPassword, setOnpassword] = useState(true);
@@ -64,8 +63,18 @@ function SignUp() {
 
         // deleting the password from the form data
         delete formDetailsCopy.password;
-        await setDoc(doc(db, "users", user.uid), formDetailsCopy);
-        navigate("/login");
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          toast.error("User already exist.", {
+            style: {
+              color: "red",
+            },
+          });
+        } else {
+          await setDoc(docRef, formDetailsCopy);
+          navigate("/login");
+        }
       } catch (error) {
         toast.error("Email already in use, try signing up with another email", {
           style: {
@@ -193,7 +202,7 @@ function SignUp() {
         <button className="mx-auto block" onClick={handleGoogle}>
           <img
             src={GoogleImage}
-            alt="google-image"
+            alt="google-logo"
             className="rounded-full p-2 bg-white w-10 h-10 shadow-gray-500 shadow-md"
           ></img>
         </button>

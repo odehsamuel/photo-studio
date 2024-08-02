@@ -7,8 +7,8 @@ const PrivateRoute = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-slate-600/70 w-screen h-screen pt-60 px-half md:px-hlf sm:px-oneqrt">
-        <Loader fill={"white"} />
+      <div className="loading w-screen h-screen fixed">
+        <Loader fill={"black"} />
       </div>
     );
   }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
+import Modal from "./Modal";
 
 const Image = ({
   image: { webformatURL, downloads, likes, comments, previewURL, id },
@@ -24,8 +25,8 @@ const Image = ({
     }
   }
   async function handleClick(e) {
+    const docRef = doc(db, "images", id);
     if (typeof id == "string") {
-      const docRef = doc(db, "images", id);
       if (e.target.classList.contains("fa-heart-o")) {
         setLiked(!liked);
         await updateDoc(docRef, {
@@ -81,11 +82,7 @@ const Image = ({
           </span>
         </div>
         <div>
-          <i
-            className={"fa fa-comment-o hover:text-rose-600"}
-            aria-hidden="true"
-          ></i>
-
+          <Modal id={id} comments={comments} />
           <p className="text-xs font-bold text-rose-600">Comments</p>
           <span className="text-xs py-0.5 px-2 bg-rose-100 text-rose-600 rounded-full">
             {comments}

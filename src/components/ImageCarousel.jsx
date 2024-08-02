@@ -18,7 +18,7 @@ function ImageCarousel() {
   // console.log(images)
 
   if (!images || images.length === 0) {
-    return <div>No images available</div>;
+    return;
   }
   return (
     <div id="carouselExampleIndicators" className="carousel slide ">
@@ -46,11 +46,14 @@ function ImageCarousel() {
       </div>
       {carouselImages && (
         <div className="carousel-inner">
-          <h3 className="absolute top-40 md:top-44 text-center z-10 w-full px-20 text-slate-100 text-xl">
-            <span className="font-bold">Access over 10,000+ wallpapers.</span>{" "}
-            Get enhanced and organized photos, adding beautiful wallpapers for
-            our viewers.
-          </h3>
+          <div className="md:hero-title absolute top-32 text-center z-10 text-slate-100 text-xl md:border-4 md:border-slate-100 md:w-96">
+            <p className="md:hero-text sm:px-20 px-12 w-full md:px-4 py-6">
+              <span className="font-extrabold text-3xl block">
+                Access over 10,000+ wallpapers.
+              </span>
+              Enhance our views with stunning wallpapers
+            </p>
+          </div>
           <div className="carousel-item active">
             <img
               src={carouselImages[0].webformatURL}

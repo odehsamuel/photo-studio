@@ -4,16 +4,20 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { NavLink, useNavigate } from "react-router-dom";
-import { CameraLogo } from "../Mode/CameraLogo";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase.config";
 import { toast } from "react-toastify";
 import Header from "../Header";
+// import { getAuth } from "firebase/auth";
+// import { useAuthStatus } from "../hooks/useAuthStatus";
 
 function ImageUpload() {
+  // const { loggedIn } = useAuthStatus();
+
+  // const auth = getAuth();
   const [formDetails, setFormdetails] = useState({
     image: null,
     tag: "",
@@ -21,6 +25,10 @@ function ImageUpload() {
 
   const navigate = useNavigate();
   const { image, tag, description } = formDetails;
+
+  // function handleClick() {
+  //   auth.signOut();
+  // }
 
   function handleChange(e) {
     if (e.target.id === "image") {
@@ -123,12 +131,8 @@ function ImageUpload() {
 
   return (
     <div className="bg-slate-50 w-screen h-screen">
-      {/* <div className="pt-2 mb-4 h-12 w-12"> */}
       <div className=" pt-2 h-20 mb-4 w-full bg-slate-500 fixed top-0">
-        {/* <NavLink to="/">
-          <CameraLogo fill={"black"} />
-        </NavLink> */}
-        <Header/>
+        <Header />
       </div>
       <form
         onSubmit={handleSubmit}

@@ -1,51 +1,29 @@
 import { NavLink } from "react-router-dom";
 import { CameraLogo } from "./Mode/CameraLogo";
 import SearchBar from "./SearchBar";
-import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase.config";
+import { useAuthStatus } from "./hooks/useAuthStatus";
+import SidebarModal from "./SidebarModal";
 
 const Header = () => {
-  const hamburguerButton = document.querySelector(".hamburger__container");
-  const backlightElement = document.querySelector(".backlight");
-  const sidebarElement = document.querySelector(".sidebar");
+  const { loggedIn, handleClick } = useAuthStatus();
 
-  const [loggedIn, setLoggedIn] = useState(true);
-  const auth = getAuth();
+  document.addEventListener("scroll", () => {
+    const heroImage = document.getElementById("carouselExampleIndicators");
+    const headerSection = document.querySelector(".header");
 
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.uid) {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setLoggedIn(user);
-        } else {
-          setLoggedIn(false);
-        }
+    if (heroImage) {
+      const heroImageBottom = heroImage.getBoundingClientRect().bottom;
+      if (heroImageBottom < 295) {
+        headerSection.classList.add("bg-slate-600");
       } else {
-        setLoggedIn(false);
+        headerSection.classList.remove("bg-slate-600");
       }
-    });
-    return () => unSubscribe();
-  }, [auth]);
-
-  function handleClick() {
-    auth.signOut();
-  }
-
-  const OpenBackdropAndSidebar = () => {
-    hamburguerButton.addEventListener("click", () => {
-      backlightElement.classList.add("open");
-      sidebarElement.classList.add("open");
-    });
-    console.log("Clicked")
-  };
+    } else return;
+  });
 
   return (
     <div className="absolute">
-      <div className="py-2 px-4 flex justify-between items-center flex-grow fixed z-20 w-full">
+      <div className="header py-2 px-4 flex justify-between items-center fixed z-20 w-full">
         <NavLink to="/">
           <CameraLogo fill={"#c5c3c3"} />
         </NavLink>
@@ -79,14 +57,7 @@ const Header = () => {
             </li>
           </NavLink>
         </ul>
-        <div
-          className="hamburger__container"
-          onClick={OpenBackdropAndSidebar}
-        >
-          <span className="hamburger-item"></span>
-          <span className="hamburger-item"></span>
-          <span className="hamburger-item"></span>
-        </div>
+        <SidebarModal />
       </div>
     </div>
   );

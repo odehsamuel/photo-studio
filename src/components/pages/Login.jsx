@@ -9,9 +9,8 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase.config";
-import firebase from "firebase/compat/app";
 
 function Login() {
   const [onPassword, setOnpassword] = useState(true);
@@ -75,18 +74,7 @@ function Login() {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      // if (!snap.exists) {
-      //   navigate("/login");
-      //   toast.error("Just got sign up, try logging in again!", {
-      //     style: {
-      //       color: "red",
-      //     },
-      //   });
       if (!docSnap.exists()) {
-        // await setDoc(doc(db, "users", user.uid), {
-        //   email: user.email,
-        //   timestamp: serverTimestamp(),
-        // });
         toast.error("Invalid User, try signing up instead pls.", {
           style: {
             color: "red",
@@ -172,7 +160,7 @@ function Login() {
         <button className="mx-auto block " onClick={handleGoogle}>
           <img
             src={GoogleImage}
-            alt="google-image"
+            alt="google-logo"
             className="rounded-full p-2 bg-white w-10 h-10 shadow-gray-500 shadow-md"
           ></img>
         </button>

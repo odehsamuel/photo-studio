@@ -45,7 +45,7 @@ export const ImagesContextProvider = ({ children }) => {
     }
 
     const shuffledArray = shuffleArray([...mergedArray]);
-    const count = shuffledArray.slice(0, 12);
+    const count = shuffledArray.slice(0, 16);
 
     dispatch({
       type: "FETCH_IMAGES",
