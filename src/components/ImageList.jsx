@@ -10,10 +10,12 @@ const ImageList = () => {
     FetchImages();
   }, []);
 
+  const counts = images.slice(0, 16);
+
   return (
     <div className="bg-black mx-auto pb-4">
       <div className=" grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 items-center pt-8 justify-items-center mx-12">
-        {images.map((image) => (
+        {counts.map((image) => (
           <Image image={image} key={image.id} />
         ))}
       </div>

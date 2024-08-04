@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
 import canva from "../Mode/icons8-canva-48.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ImagesContext from "../../context/ImagesContext/ImagesContext";
 import Image from "../Image";
 import Footer from "../Footer";
@@ -13,36 +13,41 @@ import { Loader } from "../Mode/Loader";
 
 function ImagePreview() {
   const date = new Date().getFullYear();
-  const { images } = useContext(ImagesContext);
+  const { images, image, searchSingleImage } = useContext(ImagesContext);
   const [showDetails, setShowDetails] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const { isLoading } = useAuthStatus();
 
-  const relatedImages = images.slice(0, 7);
+  // console.log(image);
 
-  const { id } = useParams();
-  const [previedImage] = images.filter((image) => image.id == id);
+  const { id, tags } = useParams();
+  // const [image] = images.filter((image) => image.id == id);
+  // console.log(image)
   async function downloadImage() {
-    if (typeof previedImage.id == "string") {
-      const docRef = doc(db, "images", previedImage.id);
+    if (typeof image.id == "string") {
+      const docRef = doc(db, "images", image.id);
       setDownloaded(true);
-      saveAs(
-        previedImage.webformatURL,
-        `${previedImage.previewURL.substr(28)}`
-      );
+      saveAs(image.webformatURL, `${image.previewURL.substr(28)}`);
       await updateDoc(docRef, {
-        downloads: +previedImage.downloads + 1,
+        downloads: +image.downloads + 1,
       });
     } else {
       setDownloaded(true);
-      saveAs(
-        previedImage.webformatURL,
-        `${previedImage.previewURL.substr(24)}`
-      );
+      saveAs(image.webformatURL, `${image.previewURL.substr(24)}`);
     }
   }
 
-  const newImages = relatedImages.filter((image) => previedImage !== image);
+  useEffect(() => {
+   
+      searchSingleImage(+id);
+    
+  }, [id]);
+
+  const previewedImage = image[0];
+  // const relatedImages = images.filter((img) => img.id !== previewedImage.id);
+  // const newImages = relatedImages.slice(0, 7);
+
+  // console.log(previewedImage);
 
   if (isLoading) {
     return (
@@ -56,11 +61,11 @@ function ImagePreview() {
         <div className=" pt-2 h-20 mb-4 w-full bg-slate-500 fixed top-0 z-20">
           <Header />
         </div>
-        {previedImage && (
+        {previewedImage && (
           <div className="md:flex items-center justify-evenly px-4 relative top-16">
             <div className="mb-4 mx-auto">
               <img
-                src={previedImage.webformatURL}
+                src={previewedImage.webformatURL}
                 alt="image-preview"
                 className="md:w-80 sm:w-64 md:h-vsm h-96 object-cover mx-auto mt-10"
               />
@@ -69,7 +74,7 @@ function ImagePreview() {
               <div className="flex my-4 px-6 justify-evenly">
                 <a
                   // href="https://www.canva.com/"
-                  href={`https://www.canva.com/design/${previedImage.previewURL}/edit`}
+                  href={`https://www.canva.com/design/${previewedImage.previewURL}/edit`}
                   className="rounded-full border-2 py-2 px-2.5 md:w-32 sm:w-32 mx-2 text-sm text-center"
                 >
                   <img
@@ -91,27 +96,27 @@ function ImagePreview() {
               <ul className="px-6">
                 <li className="flex justify-between">
                   <p>Views</p>
-                  <p>{previedImage.downloads}</p>
+                  <p>{previewedImage.downloads}</p>
                 </li>
                 <li className="flex justify-between">
                   <p>Likes</p>
-                  <p>{previedImage.likes}</p>
+                  <p>{previewedImage.likes}</p>
                 </li>
                 <li className="flex justify-between">
                   <p>Comments</p>
-                  <p>{previedImage.comments}</p>
+                  <p>{previewedImage.comments}</p>
                 </li>
                 {showDetails && (
                   <>
                     <li className="flex justify-between">
                       <p>Downloads</p>
-                      <p>{previedImage.downloads}</p>
+                      <p>{previewedImage.downloads}</p>
                     </li>
                     <div>
                       <h3 className="text-sm font-semibold">Description</h3>
 
-                      {previedImage.description ? (
-                        <p className="text-sm">{previedImage.description}</p>
+                      {previewedImage.description ? (
+                        <p className="text-sm">{previewedImage.description}</p>
                       ) : (
                         <p className="text-sm">
                           Lorem ipsum dolor sit amet consectetur adipisicing
@@ -137,7 +142,7 @@ function ImagePreview() {
           RELATED SEARCH
         </h3>
         <div className="grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 gap-1.5 items-center pt-2 justify-items-center px-4 mb-4">
-          {newImages.map((image) => (
+          {images.map((image) => (
             <Image image={image} key={image.id} />
           ))}
         </div>

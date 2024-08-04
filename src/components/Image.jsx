@@ -6,11 +6,20 @@ import { db } from "../firebase.config";
 import Modal from "./Modal";
 
 const Image = ({
-  image: { webformatURL, downloads, likes, comments, previewURL, id },
+  image: { webformatURL, downloads, likes, comments, previewURL, id, tags },
 }) => {
   const [liked, setLiked] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
+  // const newtags = tags.split(" ,");
+  // console.log(newtags.join("-"))
+
+  // let iterator = newtags.values();
+
+  // // Here all the elements of the array is being printed.
+  // for (let elements of iterator) {
+    
+  // }
   async function downloadImage() {
     if (typeof id == "string") {
       const docRef = doc(db, "images", id);
@@ -47,7 +56,7 @@ const Image = ({
   return (
     <div className="container overflow-hidden">
       <div className="relative">
-        <Link to={`/image-preview/${id}`}>
+        <Link to={`/image-preview/${tags}/${id}`}>
           {/* <Link to={`/image-preview/${previewURL.substr(24)}`}> */}
           <img
             src={webformatURL}

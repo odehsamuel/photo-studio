@@ -55,7 +55,7 @@ function ImageUpload() {
       });
     } else if (tag.split(",").length - 1 < 2) {
       toast.error(
-        "Enter 3 or more tags, sepereated by commas(eg. coffee, tea, caffeine)",
+        "Enter 3 or more tags, separated by commas(eg. coffee, tea, caffeine)",
         {
           style: {
             color: "red",
@@ -166,7 +166,7 @@ function ImageUpload() {
                   type="tags"
                   id="tag"
                   className="upload-input block w-full placeholder:text-sm"
-                  placeholder="Enter 3 or more tags, sepereated by commas(eg. coffee, tea, caffeine)"
+                  placeholder="Enter 3 or more tags, separated by commas(eg. coffee, tea, caffeine)"
                   value={tag}
                   onChange={handleChange}
                 />
