@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
 import canva from "../Mode/icons8-canva-48.png";
 import { useContext, useEffect, useState } from "react";
@@ -10,19 +10,22 @@ import { db } from "../../firebase.config";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import { Loader } from "../Mode/Loader";
+// import useNavigationDirection from "../hooks/useNavigationDirection";
 
 function ImagePreview() {
   const date = new Date().getFullYear();
   const { images, image, searchSingleImage } = useContext(ImagesContext);
+  const navigate = useNavigate()
   const [showDetails, setShowDetails] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const { isLoading } = useAuthStatus();
+  // const isBackwards = useNavigationDirection();
+  const enteredData = localStorage.getItem("searchedData");
+  const initialValue = JSON.parse(enteredData);
 
-  // console.log(image);
+  // console.log(isBackwards)
 
-  const { id, tags } = useParams();
-  // const [image] = images.filter((image) => image.id == id);
-  // console.log(image)
+  const { id } = useParams();
   async function downloadImage() {
     if (typeof image.id == "string") {
       const docRef = doc(db, "images", image.id);
@@ -36,18 +39,15 @@ function ImagePreview() {
       saveAs(image.webformatURL, `${image.previewURL.substr(24)}`);
     }
   }
-
   useEffect(() => {
-   
-      searchSingleImage(+id);
-    
+    if (id.length > 10) {
+      searchSingleImage(id, enteredData);
+    } else {
+      searchSingleImage(+id, enteredData);
+    }
   }, [id]);
 
   const previewedImage = image[0];
-  // const relatedImages = images.filter((img) => img.id !== previewedImage.id);
-  // const newImages = relatedImages.slice(0, 7);
-
-  // console.log(previewedImage);
 
   if (isLoading) {
     return (

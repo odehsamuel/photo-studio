@@ -24,7 +24,12 @@ const Header = () => {
   return (
     <div className="absolute">
       <div className="header py-2 px-4 flex justify-between items-center fixed z-20 w-full">
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          onClick={() => {
+            localStorage.setItem("searchedData", JSON.stringify("isFalse"));
+          }}
+        >
           <CameraLogo fill={"#c5c3c3"} />
         </NavLink>
         <SearchBar />
