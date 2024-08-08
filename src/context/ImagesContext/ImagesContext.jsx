@@ -1,4 +1,4 @@
-import { createContext, useReducer, useRef } from "react";
+import { createContext, useReducer, useRef, useState } from "react";
 import ImagesReducer from "./ImagesReducer";
 import {
   collection,
@@ -15,6 +15,7 @@ import { db } from "../../firebase.config";
 const ImagesContext = createContext();
 
 export const ImagesContextProvider = ({ children }) => {
+  const [isSearchValid, setIsSearchValid] = useState(true);
   const enteredData = useRef("");
 
   const initializedImages = {
@@ -51,6 +52,8 @@ export const ImagesContextProvider = ({ children }) => {
     const shuffledArray = shuffleArray([...mergedArray]);
     if (id) {
       const previedImage = mergedArray.filter((image) => image.id === id);
+      console.log(previedImage);
+
       const relatedImage = shuffledArray
         .filter((image) => image.id !== id)
         .slice(0, 7);
@@ -71,66 +74,71 @@ export const ImagesContextProvider = ({ children }) => {
     const params = new URLSearchParams({
       q: text,
     });
-
+    
     const response = await fetch(
       `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&${params}&image_type=photo&pretty=true`
     );
-
+    
     const { hits } = await response.json();
-
-    let images = [];
-    const querySnapshot = await getDocs(
-      query(
-        collection(db, "images"),
-        where("tags", "array-contains", `${text}`),
-        orderBy("timestamp", "desc"),
-        limit(10)
-      )
-    );
-    querySnapshot.forEach((doc) => {
-      images.push({
-        id: doc.id,
-        ...doc.data(),
+    
+    if (hits.length === 0) {
+      setIsSearchValid(false);
+      localStorage.setItem("searchedData", JSON.stringify("isFalse"))
+    } else {
+      setIsSearchValid(true);
+      let images = [];
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, "images"),
+          where("tags", "array-contains", `${text}`),
+          orderBy("timestamp", "desc"),
+          limit(10)
+        )
+      );
+      querySnapshot.forEach((doc) => {
+        images.push({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
-    });
-    const newImages = [...images, ...hits];
+      const newImages = [...images, ...hits];
 
-    function shuffleArray(newImages) {
-      for (let i = newImages.length - 1; i > 0; i--) {
-        // Generate a random index from 0 to i
-        const j = Math.floor(Math.random() * (i + 1));
-        // Swap elements array[i] and array[j]
-        [newImages[i], newImages[j]] = [newImages[j], newImages[i]];
+      function shuffleArray(newImages) {
+        for (let i = newImages.length - 1; i > 0; i--) {
+          // Generate a random index from 0 to i
+          const j = Math.floor(Math.random() * (i + 1));
+          // Swap elements array[i] and array[j]
+          [newImages[i], newImages[j]] = [newImages[j], newImages[i]];
+        }
+        return newImages;
       }
-      return newImages;
-    }
 
-    const shuffledArray = shuffleArray([...newImages]);
-    const relatedImage = shuffledArray
-      .filter((image) => image.id !== id)
-      .slice(0, 7);
-    if (id) {
-      if (typeof id === "string") {
-        const docRef = doc(db, "images", id);
-        getDoc(docRef).then((doc) => {
+      const shuffledArray = shuffleArray([...newImages]);
+      const relatedImage = shuffledArray
+        .filter((image) => image.id !== id)
+        .slice(0, 7);
+      if (id) {
+        if (typeof id === "string") {
+          const docRef = doc(db, "images", id);
+          getDoc(docRef).then((doc) => {
+            dispatch({
+              type: "GET_IMAGE",
+              payload: [[doc.data()], relatedImage],
+            });
+          });
+        } else {
+          const previedImage = hits.filter((image) => image.id === id);
           dispatch({
             type: "GET_IMAGE",
-            payload: [[doc.data()], relatedImage],
+            payload: [previedImage, relatedImage],
           });
-        });
+        }
       } else {
-        const previedImage = hits.filter((image) => image.id === id);
-
         dispatch({
-          type: "GET_IMAGE",
-          payload: [previedImage, relatedImage],
+          type: "GET_IMAGES",
+          payload: shuffledArray,
         });
       }
-    } else {
-      dispatch({
-        type: "GET_IMAGES",
-        payload: shuffledArray,
-      });
     }
   }
 
@@ -147,6 +155,7 @@ export const ImagesContextProvider = ({ children }) => {
     <ImagesContext.Provider
       value={{
         enteredData,
+        isSearchValid,
         ...state,
         FetchImages,
         SearchImage,

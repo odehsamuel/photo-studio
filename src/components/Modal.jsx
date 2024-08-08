@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useAuthStatus } from "./hooks/useAuthStatus";
+import { useNavigate } from "react-router-dom";
 
 const Modal = () => {
   const [comment, setComment] = useState("");
+  const {loggedIn} = useAuthStatus()
+  const navigate = useNavigate() 
 
   const handleSubmit = (e) => {
     // const docRef = doc(db, "images", id);
@@ -20,17 +24,22 @@ const Modal = () => {
 
   return (
     <div>
-      <button
+      {<button
         type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-        data-bs-whatever="@getbootstrap"
+        data-bs-toggle={loggedIn && "modal"}
+        data-bs-target={loggedIn && "#exampleModal"}
+        data-bs-whatever={loggedIn && "@getbootstrap"}
+        onClick={() => {
+          if(!loggedIn){
+            navigate("/login")
+          }
+        }}
       >
         <i
           className={"fa fa-comment-o hover:text-rose-600"}
           aria-hidden="true"
         ></i>
-      </button>
+      </button>}
 
       <div
         className="modal fade"

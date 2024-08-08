@@ -18,7 +18,7 @@ const Image = ({
 
   // // Here all the elements of the array is being printed.
   // for (let elements of iterator) {
-    
+
   // }
   async function downloadImage() {
     if (typeof id == "string") {
@@ -34,8 +34,8 @@ const Image = ({
     }
   }
   async function handleClick(e) {
-    const docRef = doc(db, "images", id);
-    if (typeof id == "string") {
+    if (typeof id === "string") {
+      const docRef = doc(db, "images", id);
       if (e.target.classList.contains("fa-heart-o")) {
         setLiked(!liked);
         await updateDoc(docRef, {
@@ -47,17 +47,18 @@ const Image = ({
           likes: +likes,
         });
       }
-    } else if (e.target.classList.contains("fa-heart-o")) {
-      setLiked(!liked);
-    } else if (e.target.classList.contains("fa-heart")) {
-      setLiked(!liked);
+    } else {
+      if (e.target.classList.contains("fa-heart-o")) {
+        setLiked(!liked);
+      } else if (e.target.classList.contains("fa-heart")) {
+        setLiked(!liked);
+      }
     }
   }
   return (
     <div className="container overflow-hidden">
       <div className="relative">
         <Link to={`/image-preview/${tags}/${id}`}>
-          {/* <Link to={`/image-preview/${previewURL.substr(24)}`}> */}
           <img
             src={webformatURL}
             alt="image-preview"

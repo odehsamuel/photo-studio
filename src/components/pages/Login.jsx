@@ -48,6 +48,11 @@ function Login() {
 
         await signInWithEmailAndPassword(auth, email, password);
         if (auth.currentUser) {
+          toast.success("Logged in successful.", {
+            style: {
+              color: "green",
+            },
+          });
           navigate("/");
         }
       } catch (error) {
@@ -81,6 +86,11 @@ function Login() {
           },
         });
       } else {
+        toast.success("Logged in successful.", {
+          style: {
+            color: "green",
+          },
+        });
         navigate("/");
       }
     } catch (error) {
