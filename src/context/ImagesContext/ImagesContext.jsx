@@ -25,7 +25,7 @@ export const ImagesContextProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(ImagesReducer, initializedImages);
 
-  async function FetchImages(id) {
+  async function FetchImages(id, pagin) {
     const response1 = fetch(
       `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}`
     ).then((response) => response.json());
@@ -49,12 +49,23 @@ export const ImagesContextProvider = ({ children }) => {
       return mergedArray;
     }
 
-    const shuffledArray = shuffleArray([...mergedArray]);
+    let counts = mergedArray.slice(0, 16);
+    let shuffledArray = shuffleArray([...counts]);
+    if (pagin === 1) {
+      counts = mergedArray.slice(0, 16);
+      shuffledArray = shuffleArray([...counts]);
+    } else if (pagin === 2) {
+      counts = mergedArray.slice(16, 32);
+      shuffledArray = shuffleArray([...counts]);
+    } else if (pagin === 3) {
+      counts = mergedArray.slice(32, 48);
+      shuffledArray = shuffleArray([...counts]);
+    }
     if (id) {
       const previedImage = mergedArray.filter((image) => image.id === id);
       console.log(previedImage);
 
-      const relatedImage = shuffledArray
+      const relatedImage = mergedArray
         .filter((image) => image.id !== id)
         .slice(0, 7);
 
@@ -70,20 +81,20 @@ export const ImagesContextProvider = ({ children }) => {
     }
   }
 
-  async function SearchImage(text, id) {
+  async function SearchImage(text, id, pagin) {
     const params = new URLSearchParams({
       q: text,
     });
-    
+
     const response = await fetch(
       `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&${params}&image_type=photo&pretty=true`
     );
-    
+
     const { hits } = await response.json();
-    
+
     if (hits.length === 0) {
       setIsSearchValid(false);
-      localStorage.setItem("searchedData", JSON.stringify("isFalse"))
+      localStorage.setItem("searchedData", JSON.stringify("isFalse"));
     } else {
       setIsSearchValid(true);
       let images = [];
@@ -113,11 +124,22 @@ export const ImagesContextProvider = ({ children }) => {
         return newImages;
       }
 
-      const shuffledArray = shuffleArray([...newImages]);
-      const relatedImage = shuffledArray
-        .filter((image) => image.id !== id)
-        .slice(0, 7);
+      let counts = newImages.slice(0, 16);
+      let shuffledArray = shuffleArray([...counts]);
+      if (pagin === 1) {
+        counts = newImages.slice(0, 16);
+        shuffledArray = shuffleArray([...counts]);
+      } else if (pagin === 2) {
+        counts = newImages.slice(16, 32);
+        shuffledArray = shuffleArray([...counts]);
+      } else if (pagin === 3) {
+        counts = newImages.slice(32, 48);
+        shuffledArray = shuffleArray([...counts]);
+      }
       if (id) {
+        const relatedImage = newImages
+          .filter((image) => image.id !== id)
+          .slice(0, 7);
         if (typeof id === "string") {
           const docRef = doc(db, "images", id);
           getDoc(docRef).then((doc) => {
@@ -136,7 +158,7 @@ export const ImagesContextProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_IMAGES",
-          payload: shuffledArray,
+          payload: counts,
         });
       }
     }
