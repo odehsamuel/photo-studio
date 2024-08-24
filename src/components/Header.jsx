@@ -27,7 +27,7 @@ const Header = () => {
         <NavLink
           to="/"
           onClick={() => {
-            localStorage.setItem("searchedData", JSON.stringify("isFalse"));
+            localStorage.setItem("searchedData", "isFalse");
           }}
         >
           <CameraLogo fill={"#c5c3c3"} />
@@ -46,21 +46,33 @@ const Header = () => {
                   Join
                 </li>
               </NavLink>
+              <NavLink to={"/image-upload"}>
+                <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
+                  <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
+                  Upload
+                </li>
+              </NavLink>
             </>
           ) : (
-            <NavLink to={"/"} onClick={handleClick}>
-              <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
-                Log out
-              </li>
-            </NavLink>
+            <>
+              <NavLink to={"/"} onClick={handleClick}>
+                <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
+                  Logout
+                </li>
+              </NavLink>
+              {/* <NavLink to={"/account"}>
+                <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
+                  Account
+                </li>
+              </NavLink> */}
+              <NavLink to={"/image-upload"}>
+                <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
+                  <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
+                  Upload
+                </li>
+              </NavLink>
+            </>
           )}
-
-          <NavLink to={"/image-upload"}>
-            <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
-              <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
-              Upload
-            </li>
-          </NavLink>
         </ul>
         <SidebarModal />
       </div>

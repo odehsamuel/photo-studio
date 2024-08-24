@@ -46,6 +46,11 @@ const SidebarModal = () => {
                   Login
                 </p>
               </Link>
+              <Link to="/image-upload" className=" my-4">
+                <p className="w-20 bg-green-500 text-slate-100 my-2 text-center rounded-lg py-1.5">
+                  Upload
+                </p>
+              </Link>
             </>
           ) : (
             <>
@@ -54,13 +59,18 @@ const SidebarModal = () => {
                   Logout
                 </p>
               </Link>
+              {/* <Link to={"/account"}>
+                <p className="w-20 border-2 border-green-500 text-green-500 my-2 text-center rounded-lg py-1.5">
+                  Account
+                </p>
+              </Link> */}
+              <Link to="/image-upload" className=" my-4">
+                <p className="w-20 bg-green-500 text-slate-100 my-2 text-center rounded-lg py-1.5">
+                  Upload
+                </p>
+              </Link>
             </>
           )}
-          <Link to="/image-upload" className=" my-4">
-            <p className="w-20 bg-green-500 text-slate-100 my-2 text-center rounded-lg py-1.5">
-              Upload
-            </p>
-          </Link>
         </div>
       </div>
     </div>

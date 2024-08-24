@@ -5,7 +5,6 @@ import Pagination from "./Pagination";
 
 const ImageList = () => {
   const { images, FetchImages } = useContext(ImagesContext);
-  console.log(images.length);
 
   useEffect(() => {
     FetchImages();
@@ -21,7 +20,7 @@ const ImageList = () => {
         </div>
       ) : (
         <div className="py-52 text-center">
-          <h3 className="text-3xl text-rose-500 ">End of search</h3>
+          <h3 className="text-3xl text-rose-500 ">No image here.</h3>
           <p className="text-slate-100">Try going back.</p>
         </div>
       )}

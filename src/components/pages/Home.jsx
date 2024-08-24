@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import Footer from "../Footer";
 import Header from "../Header";
 import ImageCarousel from "../ImageCarousel";
@@ -11,7 +11,11 @@ function Home() {
   const { isSearchValid } = useContext(ImagesContext);
   const { isLoading } = useAuthStatus();
   const date = new Date().getFullYear();
+  const searched = localStorage.getItem("searchedData");
 
+  useEffect(() => {
+    localStorage.setItem("searchedData", "isFalse");
+  }, []);
   if (isLoading) {
     return (
       <div className="loading w-screen h-screen fixed">

@@ -10,20 +10,14 @@ import { db } from "../../firebase.config";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import { Loader } from "../Mode/Loader";
-// import useNavigationDirection from "../hooks/useNavigationDirection";
 
 function ImagePreview() {
   const date = new Date().getFullYear();
   const { images, image, searchSingleImage } = useContext(ImagesContext);
-  const navigate = useNavigate()
   const [showDetails, setShowDetails] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const { isLoading } = useAuthStatus();
-  // const isBackwards = useNavigationDirection();
   const enteredData = localStorage.getItem("searchedData");
-  const initialValue = JSON.parse(enteredData);
-
-  // console.log(isBackwards)
 
   const { id } = useParams();
   async function downloadImage() {
@@ -73,7 +67,7 @@ function ImagePreview() {
             <div className="md:justify-evenly w-80 sm:w-98 mx-auto rounded-2xl py-6 border-2 shadow-md md:font-normal sm:mx-auto">
               <div className="flex my-4 px-6 justify-evenly">
                 <a
-                  // href="https://www.canva.com/"
+                  // href={'https://canva.com/content-partner/?utm_medium=partner&utm_source=pixabay&utm_campaign=retouch_in_canva_edit_image&image-url=https%3A//${previewedImage.largeImageURL}%3Flonglived%3D&external-id=${previewedImage.id}&canva-media-id=MAELp2nabtU'}
                   href={`https://www.canva.com/design/${previewedImage.previewURL}/edit`}
                   className="rounded-full border-2 py-2 px-2.5 md:w-32 sm:w-32 mx-2 text-sm text-center"
                 >
@@ -96,7 +90,7 @@ function ImagePreview() {
               <ul className="px-6">
                 <li className="flex justify-between">
                   <p>Views</p>
-                  <p>{previewedImage.downloads}</p>
+                  <p>{previewedImage.views}</p>
                 </li>
                 <li className="flex justify-between">
                   <p>Likes</p>

@@ -9,15 +9,16 @@ const SearchBar = () => {
   const navigate = useNavigate();
   
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (data === "") {
-      toast.error("pls enter a text you want to search", {
+      toast.error("pls enter a text to be searched", {
         style: { color: "red" },
       });
     } else {
       SearchImage(data);
-      setData("");
+      // setData("");
       navigate("/");
     }
   };
@@ -31,7 +32,7 @@ const SearchBar = () => {
         value={data}
         onChange={(e) => {
           enteredData.current = e.target.value;
-          localStorage.setItem("searchedData", JSON.stringify(e.target.value));
+          localStorage.setItem("searchedData", (e.target.value));
           setData(e.target.value);
         }}
       ></input>

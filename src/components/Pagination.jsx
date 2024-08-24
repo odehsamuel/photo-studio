@@ -24,7 +24,7 @@ const Pagination = () => {
             aria-current="page"
             onClick={() => {
               {
-                searched === '"isFalse"'
+                searched === "isFalse"
                   ? FetchImages(undefined, 1)
                   : SearchImage(searched, undefined, 1);
               }
@@ -43,7 +43,7 @@ const Pagination = () => {
             }
             onClick={() => {
               {
-                searched === '"isFalse"'
+                searched === "isFalse"
                   ? FetchImages(undefined, 2)
                   : SearchImage(searched, undefined, 2);
               }
@@ -51,7 +51,7 @@ const Pagination = () => {
               setChecked2(true);
               setChecked3(false);
             }}
-          >
+            >
             <a className="page-link">2</a>
           </li>
           <li
@@ -62,9 +62,9 @@ const Pagination = () => {
             }
             onClick={() => {
               {
-                searched === '"isFalse"'
-                  ? FetchImages(undefined, 3)
-                  : SearchImage(searched, undefined, 3);
+                searched === "isFalse"
+                ? FetchImages(undefined, 3)
+                : SearchImage(searched, undefined, 3);
               }
               setChecked1(false);
               setChecked2(false);

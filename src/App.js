@@ -11,6 +11,7 @@ import ForgottenPassword from "./components/pages/ForgottenPassword";
 import ImagePreview from "./components/pages/ImagePreview";
 import ImageUpload from "./components/pages/ImageUpload";
 import PrivateRoute from "./components/PrivateRoute";
+import Account from "./components/pages/Account";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/image-upload" element={<ImageUpload />} />
           </Route>
           <Route path="/image-preview/:tags/:id" element={<ImagePreview />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
         <ToastContainer />
       </Router>

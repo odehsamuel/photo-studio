@@ -63,7 +63,6 @@ export const ImagesContextProvider = ({ children }) => {
     }
     if (id) {
       const previedImage = mergedArray.filter((image) => image.id === id);
-      console.log(previedImage);
 
       const relatedImage = mergedArray
         .filter((image) => image.id !== id)
@@ -94,7 +93,7 @@ export const ImagesContextProvider = ({ children }) => {
 
     if (hits.length === 0) {
       setIsSearchValid(false);
-      localStorage.setItem("searchedData", JSON.stringify("isFalse"));
+      localStorage.setItem("searchedData", "isFalse");
     } else {
       setIsSearchValid(true);
       let images = [];
@@ -138,21 +137,23 @@ export const ImagesContextProvider = ({ children }) => {
       }
       if (id) {
         const relatedImage = newImages
-          .filter((image) => image.id !== id)
-          .slice(0, 7);
+        .filter((image) => image.id !== id)
+        .slice(0, 7);
+        const shuffledArray = shuffleArray([...relatedImage]);
         if (typeof id === "string") {
           const docRef = doc(db, "images", id);
           getDoc(docRef).then((doc) => {
             dispatch({
               type: "GET_IMAGE",
-              payload: [[doc.data()], relatedImage],
+              payload: [[doc.data()], shuffledArray],
             });
           });
         } else {
           const previedImage = hits.filter((image) => image.id === id);
+          console.log(previedImage)
           dispatch({
             type: "GET_IMAGE",
-            payload: [previedImage, relatedImage],
+            payload: [previedImage, shuffledArray],
           });
         }
       } else {
@@ -166,7 +167,7 @@ export const ImagesContextProvider = ({ children }) => {
 
   //search single image
   async function searchSingleImage(id, text) {
-    if (text === '"isFalse"') {
+    if (text === "isFalse") {
       FetchImages(id);
     } else {
       SearchImage(text, id);
