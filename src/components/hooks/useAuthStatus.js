@@ -35,9 +35,9 @@ export const useAuthStatus = () => {
   }, [isMounted, auth]);
 
   const handleClick = () => {
-    setLoggedIn(false);
+    // setLoggedIn(false);
     auth.signOut();
   };
 
-  return { loggedIn, isLoading, handleClick };
+  return { loggedIn, setLoggedIn, isLoading, handleClick };
 };

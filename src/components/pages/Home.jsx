@@ -8,7 +8,7 @@ import { useAuthStatus } from "../hooks/useAuthStatus";
 import ImagesContext from "../../context/ImagesContext/ImagesContext";
 
 function Home() {
-  const { isSearchValid } = useContext(ImagesContext);
+  const { isSearchValid, images } = useContext(ImagesContext);
   const { isLoading } = useAuthStatus();
   const date = new Date().getFullYear();
   const searched = localStorage.getItem("searchedData");

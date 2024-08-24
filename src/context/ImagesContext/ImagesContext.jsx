@@ -150,7 +150,6 @@ export const ImagesContextProvider = ({ children }) => {
           });
         } else {
           const previedImage = hits.filter((image) => image.id === id);
-          console.log(previedImage)
           dispatch({
             type: "GET_IMAGE",
             payload: [previedImage, shuffledArray],

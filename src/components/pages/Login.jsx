@@ -48,7 +48,7 @@ function Login() {
 
         await signInWithEmailAndPassword(auth, email, password);
         if (auth.currentUser) {
-          toast.success("Logged in successful.", {
+          toast.success(`Welcome back ${auth.currentUser.displayName}`, {
             style: {
               color: "green",
             },
@@ -86,7 +86,7 @@ function Login() {
           },
         });
       } else {
-        toast.success("Logged in successful.", {
+        toast.success(`Welcome back ${user.displayName}`, {
           style: {
             color: "green",
           },

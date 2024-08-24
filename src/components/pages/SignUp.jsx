@@ -44,9 +44,8 @@ function SignUp() {
         style: { color: "red" },
       });
     } else {
+      const auth = getAuth();
       try {
-        const auth = getAuth();
-
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -73,7 +72,13 @@ function SignUp() {
           });
         } else {
           await setDoc(docRef, formDetailsCopy);
+          toast.success("signed up successful", {
+            style: {
+              color: "green",
+            },
+          });
           navigate("/login");
+          auth.signOut()
         }
       } catch (error) {
         toast.error("Email already in use, try signing up with another email", {
@@ -81,7 +86,7 @@ function SignUp() {
             color: "red",
           },
         });
-        console.log(error);
+        auth.signOut();
       }
     }
   }
@@ -102,13 +107,20 @@ function SignUp() {
           email: user.email,
           timestamp: serverTimestamp(),
         });
+        toast.success("signed up successful", {
+          style: {
+            color: "green",
+          },
+        });
         navigate("/login");
+        auth.signOut();
       } else {
         toast.error("Already signed in, try logging in instead!", {
           style: {
             color: "red",
           },
         });
+        auth.signOut();
       }
     } catch (error) {
       toast.error("An error occured with Google sign up", {

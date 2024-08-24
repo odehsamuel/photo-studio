@@ -5,6 +5,7 @@ import Pagination from "./Pagination";
 
 const ImageList = () => {
   const { images, FetchImages } = useContext(ImagesContext);
+  const newImages = images.slice(0, 16);
 
   useEffect(() => {
     FetchImages();
@@ -13,8 +14,8 @@ const ImageList = () => {
   return (
     <div className="bg-black mx-auto pb-4">
       {images.length > 1 ? (
-        <div className=" grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 items-center pt-8 justify-items-center mx-12">
-          {images.map((image) => (
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-6 items-center pt-8 justify-items-center mx-4">
+          {newImages.map((image) => (
             <Image image={image} key={image.id} />
           ))}
         </div>
