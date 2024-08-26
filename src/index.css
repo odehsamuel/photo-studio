@@ -6,26 +6,7 @@
   .hero-title {
     left: calc(50% - 12rem);
     top: calc(12rem - 5rem);
-    /* transform: translate() scaleX(0);
-    animation: ScaleTitleContainer 0.4s forwards ease-out; */
   }
-  
-  /* .hero-text {
-    transform: translateY(10%);
-    animation: ScaleTextContainer 0.4s forwards ease-out;
-  }
-
-  @keyframes ScaleTitleContainer {
-    to {
-      transform: translate(0) scaleX(1);
-    }
-  }
-
-  @keyframes ScaleTextContainer {
-    to {
-      transform: translateY(0) scaleX(1);
-    }
-  } */
 
   .loading {
     margin-top: calc(50vh - 5rem);

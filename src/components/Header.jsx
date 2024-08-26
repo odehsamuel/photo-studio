@@ -60,11 +60,11 @@ const Header = () => {
                   Logout
                 </li>
               </NavLink>
-              {/* <NavLink to={"/account"}>
+              <NavLink to={"/account"}>
                 <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
                   Account
                 </li>
-              </NavLink> */}
+              </NavLink>
               <NavLink to={"/image-upload"}>
                 <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
                   <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
