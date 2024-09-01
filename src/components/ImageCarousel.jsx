@@ -15,7 +15,6 @@ function ImageCarousel() {
 
   const shuffledArray = shuffleArray([...images]);
   const carouselImages = shuffledArray.slice(0, 3);
-  // console.log(images)
 
   if (!images || images.length === 0) {
     return;

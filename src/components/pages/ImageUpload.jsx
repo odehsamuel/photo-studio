@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase.config";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import { getAuth } from "firebase/auth";
 // import { getAuth } from "firebase/auth";
 // import { useAuthStatus } from "../hooks/useAuthStatus";
 
@@ -109,6 +110,7 @@ function ImageUpload() {
             const tags = tag.split(", ");
             const formData = { ...formDataCopy, tags };
 
+            const auth = getAuth()
             addDoc(collection(db, "images"), {
               ...formData,
               likes: 0,
@@ -118,11 +120,13 @@ function ImageUpload() {
                 image.name
               }`,
               timestamp: serverTimestamp(),
+              userRef: auth.currentUser.uid,
+              status: "processing"
             });
-            toast.success("Upload was successful", {
+            toast.success("Upload is being processed", {
               style: { color: "green" },
             });
-            navigate("/");
+            navigate("/account");
           });
         }
       );

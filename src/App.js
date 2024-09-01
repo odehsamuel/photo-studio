@@ -12,6 +12,7 @@ import ImagePreview from "./components/pages/ImagePreview";
 import ImageUpload from "./components/pages/ImageUpload";
 import PrivateRoute from "./components/PrivateRoute";
 import Account from "./components/pages/Account";
+import Admin from "./components/pages/Admin";
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
           <Route path="/image-preview/:tags/:id" element={<ImagePreview />} />
           <Route path="/account" element={<PrivateRoute />}>
             <Route path="/account" element={<Account />} />
+          </Route>
+          <Route path="/admin" element={<PrivateRoute />}>
+            <Route path="/admin" element={<Admin />} />
           </Route>
         </Routes>
         <ToastContainer />
