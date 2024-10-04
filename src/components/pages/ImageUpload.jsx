@@ -126,10 +126,12 @@ function ImageUpload() {
               userRef: auth.currentUser.uid,
               status: "processing"
             });
-            toast.success("Upload is being processed", {
+            // toast.success("Upload is being processed", {
+              toast.success("Image Uploaded successfully!!!", {
               style: { color: "green" },
             });
-            navigate("/account");
+            navigate("/");
+            // navigate("/account");
           });
         }
       );
