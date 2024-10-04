@@ -59,11 +59,11 @@ const SidebarModal = () => {
                   Logout
                 </p>
               </Link>
-              <Link to={"/account"}>
+              {/* <Link to={"/account"}>
                 <p className="w-20 border-2 border-green-500 text-green-500 my-2 text-center rounded-lg py-1.5" data-bs-dismiss="offcanvas" aria-label="Close">
                   Account
                 </p>
-              </Link>
+              </Link> */}
               <Link to="/image-upload" className=" my-4">
                 <p className="w-20 bg-green-500 text-slate-100 my-2 text-center rounded-lg py-1.5" data-bs-dismiss="offcanvas" aria-label="Close">
                   Upload
