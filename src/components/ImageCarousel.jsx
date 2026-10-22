@@ -20,6 +20,7 @@ const DEFAULT_HERO_SLIDES = [
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85",
     webformatURL:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    tags: "Yosemite Valley Sunrise, California",
   },
   {
     id: "hero_starry_night",
@@ -27,6 +28,7 @@ const DEFAULT_HERO_SLIDES = [
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=85",
     webformatURL:
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80",
+    tags: "Swiss Alps Starry Night Sky",
   },
   {
     id: "hero_aurora",
@@ -34,6 +36,23 @@ const DEFAULT_HERO_SLIDES = [
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=2000&q=85",
     webformatURL:
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+    tags: "Aurora Borealis Northern Lights",
+  },
+  {
+    id: "hero_cyberpunk",
+    largeImageURL:
+      "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=2000&q=85",
+    webformatURL:
+      "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=1200&q=80",
+    tags: "Cyberpunk Neon Metropolis",
+  },
+  {
+    id: "hero_ocean",
+    largeImageURL:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=85",
+    webformatURL:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    tags: "Tropical Sunset Lagoon Beach",
   },
 ];
 
@@ -42,8 +61,17 @@ function ImageCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const carouselItems =
-    images && images.length > 0 ? images.slice(0, 5) : DEFAULT_HERO_SLIDES;
+  const validImages = Array.isArray(images)
+    ? images.filter(
+        (img) =>
+          img &&
+          (img.largeImageURL || img.webformatURL) &&
+          !String(img.webformatURL || "").includes("photostudio.com") &&
+          !String(img.webformatURL || "").endsWith(".mp3")
+      )
+    : [];
+
+  const carouselItems = validImages.length >= 3 ? validImages.slice(0, 5) : DEFAULT_HERO_SLIDES;
 
   const safeIndex = carouselItems.length > 0 ? currentIndex % carouselItems.length : 0;
 

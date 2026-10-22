@@ -6,6 +6,17 @@ import { toast } from "react-toastify";
 import CommentModal from "./CommentModal";
 import { fetchImageStats, toggleLike, trackDownload } from "../services/interactionService";
 
+const FALLBACK_REAL_IMAGES = [
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
+];
+
 const Image = ({ image }) => {
   const { webformatURL, previewURL, id, tags, downloads = 0, likes = 0, comments = 0 } = image;
 
@@ -114,7 +125,8 @@ const Image = ({ image }) => {
               decoding="async"
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80";
+                const fallbackIndex = Math.abs(Number(id) || 0) % FALLBACK_REAL_IMAGES.length;
+                e.currentTarget.src = FALLBACK_REAL_IMAGES[fallbackIndex];
               }}
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />

@@ -109,6 +109,102 @@ const CURATED_DEFAULT_IMAGES = [
     comments: 35,
     views: 13500,
   },
+  {
+    id: 10009,
+    webformatURL: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=400&q=70",
+    tags: "desert, sand dunes, sunset, golden hour, landscape",
+    user: "Jeremy Bishop",
+    likes: 534,
+    downloads: 2670,
+    comments: 29,
+    views: 15400,
+  },
+  {
+    id: 10010,
+    webformatURL: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=400&q=70",
+    tags: "tokyo, rain, neon, japan, street, night",
+    user: "Clay Banks",
+    likes: 780,
+    downloads: 4120,
+    comments: 63,
+    views: 24800,
+  },
+  {
+    id: 10011,
+    webformatURL: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=70",
+    tags: "alps, mountains, lake, reflection, peak, wilderness",
+    user: "Luca Bravo",
+    likes: 642,
+    downloads: 3340,
+    comments: 38,
+    views: 19800,
+  },
+  {
+    id: 10012,
+    webformatURL: "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=400&q=70",
+    tags: "supercar, sports car, speed, night, automotive",
+    user: "Samuele Errico",
+    likes: 419,
+    downloads: 1890,
+    comments: 21,
+    views: 12400,
+  },
+  {
+    id: 10013,
+    webformatURL: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=400&q=70",
+    tags: "lion, wildlife, animal, portrait, safari, nature",
+    user: "Zdeněk Macháček",
+    likes: 890,
+    downloads: 4890,
+    comments: 54,
+    views: 28900,
+  },
+  {
+    id: 10014,
+    webformatURL: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=400&q=70",
+    tags: "fog, pine forest, road, autumn, moody, nature",
+    user: "Thomas Kelley",
+    likes: 455,
+    downloads: 2010,
+    comments: 24,
+    views: 13900,
+  },
+  {
+    id: 10015,
+    webformatURL: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=70",
+    tags: "minimalist, architecture, geometry, clean, modern",
+    user: "Simone Hutsch",
+    likes: 360,
+    downloads: 1450,
+    comments: 16,
+    views: 8900,
+  },
+  {
+    id: 10016,
+    webformatURL: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80",
+    largeImageURL: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=2000&q=85",
+    previewURL: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=400&q=70",
+    tags: "dew, water drop, macro, leaf, green, nature",
+    user: "Aaron Burden",
+    likes: 620,
+    downloads: 3100,
+    comments: 33,
+    views: 17600,
+  },
 ];
 
 const PIXABAY_URL = (process.env.REACT_APP_PIXABAY_URL || "https://pixabay.com/api/").trim().replace(/['"]/g, "");
@@ -136,32 +232,55 @@ export const ImagesContextProvider = ({ children }) => {
     try {
       const [res1, res2] = await Promise.all([
         fetch(
-          `${PIXABAY_URL}?key=${PIXABAY_KEY}&q=wallpaper&per_page=30&image_type=photo&pretty=true`
+          `${PIXABAY_URL}?key=${PIXABAY_KEY}&q=wallpaper&per_page=40&image_type=photo&pretty=true`
         ).then((r) => r.json()).catch(() => ({ hits: [] })),
         fetch(
-          `${PIXABAY_URL}?key=${PIXABAY_KEY}&q=photography+4k&per_page=30&image_type=photo&pretty=true`
+          `${PIXABAY_URL}?key=${PIXABAY_KEY}&q=photography+4k&per_page=40&image_type=photo&pretty=true`
         ).then((r) => r.json()).catch(() => ({ hits: [] })),
       ]);
 
       const hits1 = res1.hits || [];
       const hits2 = res2.hits || [];
 
-      // Also fetch community uploads from Firestore
-      let communityUploads = [];
+      // Query only genuine, approved community uploads (filter out test screenshots/unapproved files)
+      let approvedCommunity = [];
       try {
         const querySnapshot = await getDocs(
-          query(collection(db, "images"), orderBy("timestamp", "desc"), limit(15))
+          query(collection(db, "images"), orderBy("timestamp", "desc"), limit(25))
         );
         querySnapshot.forEach((d) => {
-          communityUploads.push({ id: d.id, ...d.data() });
+          const data = d.data();
+          const url = data.webformatURL || data.previewURL || data.largeImageURL || "";
+          const isValidPhoto =
+            url.startsWith("http") &&
+            !url.includes("photostudio.com") &&
+            !url.includes(".mp3") &&
+            !url.includes(".wav") &&
+            data.status === "approved";
+
+          if (isValidPhoto) {
+            approvedCommunity.push({ id: d.id, ...data });
+          }
         });
       } catch (err) {
         console.warn("Could not fetch community uploads:", err);
       }
 
-      // Merge community uploads at the top with Pixabay hits
-      const combined = [...communityUploads, ...hits1, ...hits2];
-      const mergedArray = combined.length > 0 ? combined : CURATED_DEFAULT_IMAGES;
+      // Feature real, high-resolution Pixabay wallpapers first, then approved community photos
+      const candidateList = [...hits1, ...hits2, ...approvedCommunity];
+
+      // Deduplicate images by ID
+      const seenIds = new Set();
+      const uniqueRealImages = [];
+      for (const img of candidateList) {
+        const idKey = String(img.id);
+        if (!seenIds.has(idKey)) {
+          seenIds.add(idKey);
+          uniqueRealImages.push(img);
+        }
+      }
+
+      const mergedArray = uniqueRealImages.length > 0 ? uniqueRealImages : CURATED_DEFAULT_IMAGES;
 
       const startIndex = (pagin - 1) * 16;
       const paginatedSlice = mergedArray.slice(startIndex, startIndex + 16);
@@ -232,7 +351,7 @@ export const ImagesContextProvider = ({ children }) => {
       const data = await response.json();
       const hits = data.hits || [];
 
-      // Query community uploads matching tags
+      // Query community uploads matching tags (only approved real photos)
       let communityMatches = [];
       try {
         const querySnapshot = await getDocs(
@@ -243,13 +362,25 @@ export const ImagesContextProvider = ({ children }) => {
           )
         );
         querySnapshot.forEach((d) => {
-          communityMatches.push({ id: d.id, ...d.data() });
+          const data = d.data();
+          const url = data.webformatURL || data.previewURL || data.largeImageURL || "";
+          const isValidPhoto =
+            url.startsWith("http") &&
+            !url.includes("photostudio.com") &&
+            !url.includes(".mp3") &&
+            !url.includes(".wav") &&
+            data.status === "approved";
+
+          if (isValidPhoto) {
+            communityMatches.push({ id: d.id, ...data });
+          }
         });
       } catch (err) {
         console.warn("Could not query matching community uploads:", err);
       }
 
-      const combined = [...communityMatches, ...hits];
+      // Real photography hits first, followed by approved community matches
+      const combined = [...hits, ...communityMatches];
 
       if (combined.length === 0) {
         setIsSearchValid(false);

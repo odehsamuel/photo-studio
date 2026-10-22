@@ -289,6 +289,10 @@ function ImagePreview() {
               <img
                 src={previewedImage.largeImageURL || previewedImage.webformatURL}
                 alt={tagList[0] || "Wallpaper preview"}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85";
+                }}
                 className={`w-full max-h-[580px] sm:max-h-[640px] object-contain mx-auto transition-all duration-300 ${currentFilterClass}`}
               />
 
@@ -753,6 +757,10 @@ function ImagePreview() {
           <img
             src={previewedImage.largeImageURL || previewedImage.webformatURL}
             alt="Fullscreen view"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85";
+            }}
             className={`max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl transition-all ${currentFilterClass}`}
             onClick={(e) => e.stopPropagation()}
           />
