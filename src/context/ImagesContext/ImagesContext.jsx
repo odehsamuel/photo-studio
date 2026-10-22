@@ -23,150 +23,191 @@ export const ImagesContextProvider = ({ children }) => {
     images: [],
   };
 
+
   const [state, dispatch] = useReducer(ImagesReducer, initializedImages);
 
-  async function FetchImages(id, pagin) {
-    const response1 = fetch(
-      `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}`
-    ).then((response) => response.json());
-    const response2 = fetch(
-      `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&q=wallpaper&image_type=photo&pretty=true`
-    ).then((response) => response.json());
+  async function FetchImages(id, pagin = 1) {
+    try {
+      const [res1, res2] = await Promise.all([
+        fetch(
+          `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&q=wallpaper&per_page=30&image_type=photo&pretty=true`
+        ).then((r) => r.json()).catch(() => ({ hits: [] })),
+        fetch(
+          `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&q=photography+4k&per_page=30&image_type=photo&pretty=true`
+        ).then((r) => r.json()).catch(() => ({ hits: [] })),
+      ]);
 
-    const [data1, data2] = await Promise.all([response1, response2]);
-    const { hits } = data1;
-    const secondArray = data2["hits"];
+      const hits1 = res1.hits || [];
+      const hits2 = res2.hits || [];
 
-    const mergedArray = hits.concat(secondArray);
-
-    function shuffleArray(mergedArray) {
-      for (let i = mergedArray.length - 1; i > 0; i--) {
-        // Generate a random index from 0 to i
-        const j = Math.floor(Math.random() * (i + 1));
-        // Swap elements array[i] and array[j]
-        [mergedArray[i], mergedArray[j]] = [mergedArray[j], mergedArray[i]];
-      }
-      return mergedArray;
-    }
-
-    let counts = mergedArray.slice(0, 16);
-    let shuffledArray = shuffleArray([...counts]);
-    if (pagin === 1) {
-      counts = mergedArray.slice(0, 16);
-      shuffledArray = shuffleArray([...counts]);
-    } else if (pagin === 2) {
-      counts = mergedArray.slice(16, 32);
-      shuffledArray = shuffleArray([...counts]);
-    } else if (pagin === 3) {
-      counts = mergedArray.slice(32, 48);
-      shuffledArray = shuffleArray([...counts]);
-    }
-    if (id) {
-      const previedImage = mergedArray.filter((image) => image.id === id);
-
-      const relatedImage = mergedArray
-        .filter((image) => image.id !== id)
-        .slice(0, 7);
-
-      dispatch({
-        type: "GET_IMAGE",
-        payload: [previedImage, relatedImage],
-      });
-    } else {
-      dispatch({
-        type: "FETCH_IMAGES",
-        payload: shuffledArray,
-      });
-    }
-  }
-
-  async function SearchImage(text, id, pagin) {
-    const params = new URLSearchParams({
-      q: text,
-    });
-
-    const response = await fetch(
-      `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&${params}&image_type=photo&pretty=true`
-    );
-
-    const { hits } = await response.json();
-
-    if (hits.length === 0) {
-      setIsSearchValid(false);
-      localStorage.setItem("searchedData", "isFalse");
-    } else {
-      setIsSearchValid(true);
-      let images = [];
-      const querySnapshot = await getDocs(
-        query(
-          collection(db, "images"),
-          where("tags", "array-contains", `${text}`),
-          orderBy("timestamp", "desc"),
-          limit(10)
-        )
-      );
-      querySnapshot.forEach((doc) => {
-        images.push({
-          id: doc.id,
-          ...doc.data(),
+      // Also fetch community uploads from Firestore
+      let communityUploads = [];
+      try {
+        const querySnapshot = await getDocs(
+          query(collection(db, "images"), orderBy("timestamp", "desc"), limit(15))
+        );
+        querySnapshot.forEach((d) => {
+          communityUploads.push({ id: d.id, ...d.data() });
         });
-      });
-      const newImages = [...images, ...hits];
-
-      function shuffleArray(newImages) {
-        for (let i = newImages.length - 1; i > 0; i--) {
-          // Generate a random index from 0 to i
-          const j = Math.floor(Math.random() * (i + 1));
-          // Swap elements array[i] and array[j]
-          [newImages[i], newImages[j]] = [newImages[j], newImages[i]];
-        }
-        return newImages;
+      } catch (err) {
+        console.warn("Could not fetch community uploads:", err);
       }
 
-      let counts = newImages.slice(0, 16);
-      let shuffledArray = shuffleArray([...counts]);
-      if (pagin === 1) {
-        counts = newImages.slice(0, 16);
-        shuffledArray = shuffleArray([...counts]);
-      } else if (pagin === 2) {
-        counts = newImages.slice(16, 32);
-        shuffledArray = shuffleArray([...counts]);
-      } else if (pagin === 3) {
-        counts = newImages.slice(32, 48);
-        shuffledArray = shuffleArray([...counts]);
-      }
+      // Merge community uploads at the top with Pixabay hits
+      const mergedArray = [...communityUploads, ...hits1, ...hits2];
+
+      const startIndex = (pagin - 1) * 16;
+      const paginatedSlice = mergedArray.slice(startIndex, startIndex + 16);
+
       if (id) {
-        const relatedImage = newImages
-        .filter((image) => image.id !== id)
-        .slice(0, 7);
-        const shuffledArray = shuffleArray([...relatedImage]);
-        if (typeof id === "string") {
-          const docRef = doc(db, "images", id);
-          getDoc(docRef).then((doc) => {
-            dispatch({
-              type: "GET_IMAGE",
-              payload: [[doc.data()], shuffledArray],
-            });
-          });
-        } else {
-          const previedImage = hits.filter((image) => image.id === id);
-          dispatch({
-            type: "GET_IMAGE",
-            payload: [previedImage, shuffledArray],
-          });
+        // If string ID, check if it's a Firestore upload
+        if (typeof id === "string" && id.length > 10) {
+          try {
+            const docRef = doc(db, "images", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              const uploadImg = { id: docSnap.id, ...docSnap.data() };
+              const related = mergedArray.filter((img) => img.id !== id).slice(0, 8);
+              dispatch({
+                type: "GET_IMAGE",
+                payload: [[uploadImg], related],
+              });
+              return;
+            }
+          } catch (e) {
+            console.warn("Error fetching single uploaded doc:", e);
+          }
         }
+
+        const previewedImage = mergedArray.filter((image) => String(image.id) === String(id));
+        const relatedImage = mergedArray.filter((image) => String(image.id) !== String(id)).slice(0, 8);
+
+        dispatch({
+          type: "GET_IMAGE",
+          payload: [previewedImage, relatedImage],
+        });
       } else {
         dispatch({
-          type: "GET_IMAGES",
-          payload: counts,
+          type: "FETCH_IMAGES",
+          payload: paginatedSlice.length > 0 ? paginatedSlice : mergedArray.slice(0, 16),
         });
       }
+    } catch (err) {
+      console.error("FetchImages error:", err);
     }
   }
 
-  //search single image
+  async function SearchImage(text, id, pagin = 1) {
+    if (!text || text === "isFalse") {
+      FetchImages(id, pagin);
+      return;
+    }
+
+    try {
+      const params = new URLSearchParams({
+        q: text,
+        image_type: "photo",
+        pretty: "true",
+        per_page: "40",
+      });
+
+      const response = await fetch(
+        `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&${params}`
+      );
+      const data = await response.json();
+      const hits = data.hits || [];
+
+      // Query community uploads matching tags
+      let communityMatches = [];
+      try {
+        const querySnapshot = await getDocs(
+          query(
+            collection(db, "images"),
+            where("tags", "array-contains", text.toLowerCase()),
+            limit(10)
+          )
+        );
+        querySnapshot.forEach((d) => {
+          communityMatches.push({ id: d.id, ...d.data() });
+        });
+      } catch (err) {
+        console.warn("Could not query matching community uploads:", err);
+      }
+
+      const combined = [...communityMatches, ...hits];
+
+      if (combined.length === 0) {
+        setIsSearchValid(false);
+        localStorage.setItem("searchedData", "isFalse");
+      } else {
+        setIsSearchValid(true);
+        const startIndex = (pagin - 1) * 16;
+        const pageItems = combined.slice(startIndex, startIndex + 16);
+
+        if (id) {
+          if (typeof id === "string" && id.length > 10) {
+            try {
+              const docRef = doc(db, "images", id);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                const uploadImg = { id: docSnap.id, ...docSnap.data() };
+                const related = combined.filter((img) => String(img.id) !== String(id)).slice(0, 8);
+                dispatch({
+                  type: "GET_IMAGE",
+                  payload: [[uploadImg], related],
+                });
+                return;
+              }
+            } catch (e) {
+              console.warn("Error fetching single doc:", e);
+            }
+          }
+
+          const previewed = combined.filter((image) => String(image.id) === String(id));
+          const related = combined.filter((image) => String(image.id) !== String(id)).slice(0, 8);
+
+          dispatch({
+            type: "GET_IMAGE",
+            payload: [previewed.length > 0 ? previewed : [combined[0]], related],
+          });
+        } else {
+          dispatch({
+            type: "GET_IMAGES",
+            payload: pageItems.length > 0 ? pageItems : combined.slice(0, 16),
+          });
+        }
+      }
+    } catch (err) {
+      console.error("SearchImage error:", err);
+      setIsSearchValid(false);
+    }
+  }
+
+  // Search single image
   async function searchSingleImage(id, text) {
-    if (text === "isFalse") {
+    if (typeof id === "string" && id.length > 10) {
+      try {
+        const docRef = doc(db, "images", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const uploadImg = { id: docSnap.id, ...docSnap.data() };
+          const tagToSearch = Array.isArray(uploadImg.tags) ? uploadImg.tags[0] : "wallpaper";
+          const res = await fetch(
+            `${process.env.REACT_APP_PIXABAY_URL}?key=${process.env.REACT_APP_PIXABAY_KEY}&q=${encodeURIComponent(tagToSearch)}&image_type=photo&per_page=10`
+          ).then((r) => r.json()).catch(() => ({ hits: [] }));
+
+          dispatch({
+            type: "GET_IMAGE",
+            payload: [[uploadImg], res.hits || []],
+          });
+          return;
+        }
+      } catch (e) {
+        console.warn("Error in searchSingleImage for upload:", e);
+      }
+    }
+
+    if (!text || text === "isFalse") {
       FetchImages(id);
     } else {
       SearchImage(text, id);

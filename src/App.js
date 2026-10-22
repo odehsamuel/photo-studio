@@ -35,7 +35,18 @@ function App() {
             <Route path="/admin" element={<Admin />} />
           </Route>
         </Routes>
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-right"
+          theme="dark"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </Router>
     </ImagesContextProvider>
   );

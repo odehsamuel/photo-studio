@@ -1,82 +1,149 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { CameraLogo } from "./Mode/CameraLogo";
 import SearchBar from "./SearchBar";
 import { useAuthStatus } from "./hooks/useAuthStatus";
 import SidebarModal from "./SidebarModal";
+import { getAuth } from "firebase/auth";
 
 const Header = () => {
   const { loggedIn, handleClick } = useAuthStatus();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-  document.addEventListener("scroll", () => {
-    const heroImage = document.getElementById("carouselExampleIndicators");
-    const headerSection = document.querySelector(".header");
-
-    if (heroImage) {
-      const heroImageBottom = heroImage.getBoundingClientRect().bottom;
-      if (heroImageBottom < 295) {
-        headerSection.classList.add("bg-slate-600");
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setScrolled(true);
       } else {
-        headerSection.classList.remove("bg-slate-600");
+        setScrolled(false);
       }
-    } else return;
-  });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="absolute">
-      <div className="header py-2 px-4 flex justify-between items-center fixed z-20 w-full">
-        <NavLink
-          to="/"
-          onClick={() => {
-            localStorage.setItem("searchedData", "isFalse");
-          }}
-        >
-          <CameraLogo fill={"#c5c3c3"} />
-        </NavLink>
-        <SearchBar />
-        <ul className="navigations">
-          {!loggedIn ? (
-            <>
-              <NavLink to={"/login"}>
-                <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
-                  Log in
-                </li>
-              </NavLink>
-              <NavLink to={"/sign-up"}>
-                <li className="border hover:bg-slate-700 rounded-full py-2 w-20 text-center mr-4 text-slate-50 bg-slate-800">
-                  Join
-                </li>
-              </NavLink>
-              <NavLink to={"/image-upload"}>
-                <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
-                  <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
-                  Upload
-                </li>
-              </NavLink>
-            </>
-          ) : (
-            <>
-              <NavLink to={"/"} onClick={handleClick}>
-                <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
-                  Logout
-                </li>
-              </NavLink>
-              {/* <NavLink to={"/account"}>
-                <li className="border-2 hover:border-green-500 hover:text-green-500 rounded-full py-2 px-3 text-center mr-4 text-slate-50">
-                  Account
-                </li>
-              </NavLink> */}
-              <NavLink to={"/image-upload"}>
-                <li className="border rounded-full py-2 px-3 hover:bg-green-600 bg-green-500 mr-4">
-                  <i className="fa fa-upload fa-lg mr-2" aria-hidden="true"></i>
-                  Upload
-                </li>
-              </NavLink>
-            </>
-          )}
-        </ul>
-        <SidebarModal />
-      </div>
-    </div>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+          scrolled
+            ? "bg-slate-950/90 backdrop-blur-md shadow-xl border-b border-white/5 py-3"
+            : "bg-gradient-to-b from-slate-950/90 via-slate-950/60 to-transparent py-4"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <NavLink
+            to="/"
+            onClick={() => {
+              localStorage.setItem("searchedData", "isFalse");
+            }}
+            className="flex-shrink-0"
+          >
+            <CameraLogo />
+          </NavLink>
+
+          {/* Search bar */}
+          <div className="hidden sm:block flex-1 max-w-md mx-4">
+            <SearchBar className="w-full" />
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-3">
+            <NavLink
+              to="/"
+              onClick={() => localStorage.setItem("searchedData", "isFalse")}
+              className={({ isActive }) =>
+                `px-3.5 py-2 text-sm font-medium rounded-full transition-colors ${
+                  isActive
+                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                }`
+              }
+            >
+              Explore
+            </NavLink>
+
+            <NavLink
+              to="/image-upload"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 rounded-full shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-200"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Upload
+            </NavLink>
+
+            {!loggedIn ? (
+              <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
+                <NavLink
+                  to="/login"
+                  className="px-4 py-2 text-sm font-medium text-slate-200 hover:text-white rounded-full hover:bg-slate-800/60 transition-colors"
+                >
+                  Log In
+                </NavLink>
+                <NavLink
+                  to="/sign-up"
+                  className="px-4 py-2 text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-full border border-slate-700/80 transition-all"
+                >
+                  Join Free
+                </NavLink>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2.5 pl-2 border-l border-slate-800">
+                <NavLink
+                  to="/account"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-slate-800/80 border border-slate-800 transition-colors group"
+                  title="My Uploads & Likes"
+                >
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 text-xs shadow-sm">
+                    {(user?.displayName || user?.email || "U")[0].toUpperCase()}
+                  </div>
+                  <span className="text-xs text-slate-300 group-hover:text-white max-w-[90px] truncate">
+                    {user?.displayName || "My Profile"}
+                  </span>
+                </NavLink>
+
+                <button
+                  onClick={handleClick}
+                  className="p-2 text-slate-400 hover:text-rose-400 rounded-full hover:bg-rose-500/10 transition-colors"
+                  title="Sign Out"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile hamburger button */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-2.5 text-slate-300 hover:text-white rounded-xl bg-slate-900/80 border border-slate-800 focus:outline-none"
+              aria-label="Open menu"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar below header */}
+        <div className="sm:hidden px-4 pt-3 pb-1">
+          <SearchBar className="w-full" />
+        </div>
+      </header>
+
+      {/* Mobile Slide-over Drawer */}
+      <SidebarModal isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+    </>
   );
 };
 

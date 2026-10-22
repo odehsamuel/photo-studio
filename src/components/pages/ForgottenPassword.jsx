@@ -6,58 +6,93 @@ import { useState } from "react";
 
 function ForgottenPassword() {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
 
+    if (!email) {
+      toast.error("Please enter your registered email address", { theme: "dark" });
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
-      toast.success("Email has been sent!", {
-        style: {
-          color: "green",
-        },
-      });
-      setEmail("")
+      toast.success("Password reset instructions sent to your email! ✉️", { theme: "dark" });
+      setEmail("");
     } catch (error) {
-      toast.error("An errror occured while sending the mail.", {
-        style: {
-          color: "red",
-        },
-      });
+      toast.error("Could not find an account with that email address", { theme: "dark" });
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <div className="bg-slate-50 fixed w-screen h-screen px-4">
-      <div className="pt-2 mb-4 h-12 w-12">
-        <NavLink to="/">
-          <CameraLogo/>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+      {/* Background ambient glow circles */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Brand Header */}
+      <div className="mb-8 text-center">
+        <NavLink to="/" className="inline-block hover:opacity-90 transition-opacity">
+          <CameraLogo />
         </NavLink>
       </div>
-      <form
-        className="container bg-slate-100 rounded-lg w-4/5 sm:w-4/5 md:w-3/5 lg:w-5/12 py-4 px-3 mt-6 mx-auto my-auto shadow-xl"
-        onSubmit={handleSubmit}
-      >
-        <h3 className="font-bold text-slate-700 text-2xl mb-4">
-          Forgetten Password
-        </h3>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            className="signup-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+
+      {/* Form Card */}
+      <div className="w-full max-w-md bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl z-10">
+        <div className="mb-6">
+          <h2 className="text-2xl font-black text-white tracking-tight">
+            Reset Password
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            Enter your email and we'll send you a link to reset your password.
+          </p>
         </div>
-        <Link to={"/sign-up"} className="text-green-500 text-right block font-bold">sign up</Link>
-        <button className="bg-green-100 hover:bg-green-200 text-green-500 border rounded-2xl px-2 py-1 my-2">
-          <p className="font-bold  inline-block">Reset Password</p>{" "}
-          <i className="fa fa-arrow-right ml-2"></i>
-        </button>
-      </form>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-4 py-3 bg-slate-950/80 border border-slate-700/80 focus:border-emerald-500 rounded-xl text-sm text-white placeholder-slate-500 outline-none transition-colors"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 disabled:opacity-50 text-slate-950 font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 mt-4"
+          >
+            {isLoading ? (
+              <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <span>Send Reset Link</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </>
+            )}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-xs text-slate-400">
+          Remembered your credentials?{" "}
+          <Link to="/login" className="text-emerald-400 hover:text-emerald-300 font-bold underline ml-1">
+            Back to Sign In
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
