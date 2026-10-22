@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase.config";
 
 function Login() {
@@ -67,6 +67,7 @@ function Login() {
     try {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -74,13 +75,30 @@ function Login() {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        toast.info("Welcome to Lumina Studio! Setting up your creator profile...", { theme: "dark" });
+        await setDoc(
+          docRef,
+          {
+            name: user.displayName || user.email?.split("@")[0] || "Studio Member",
+            email: user.email || "",
+            timestamp: serverTimestamp(),
+            likedImages: [],
+            likedImageIds: [],
+            isAdmin: false,
+          },
+          { merge: true }
+        );
+        toast.success(`Welcome to Lumina Studio, ${user.displayName || "Creator"}! 🎉`, {
+          theme: "dark",
+        });
       } else {
-        toast.success(`Welcome back, ${user.displayName}! 👋`, { theme: "dark" });
+        toast.success(`Welcome back, ${user.displayName || "Creator"}! 👋`, { theme: "dark" });
       }
       navigate("/");
     } catch (error) {
-      toast.error("Google authentication failed. Please try again.", { theme: "dark" });
+      console.error("Google Auth error:", error);
+      if (error.code !== "auth/popup-closed-by-user") {
+        toast.error("Google login failed, please try again", { theme: "dark" });
+      }
     }
   }
 

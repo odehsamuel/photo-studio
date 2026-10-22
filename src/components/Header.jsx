@@ -1,17 +1,51 @@
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { CameraLogo } from "./Mode/CameraLogo";
 import SearchBar from "./SearchBar";
 import { useAuthStatus } from "./hooks/useAuthStatus";
 import SidebarModal from "./SidebarModal";
 import { getAuth } from "firebase/auth";
+import ImagesContext from "../context/ImagesContext/ImagesContext";
 
 const Header = () => {
   const { loggedIn, handleClick } = useAuthStatus();
+  const { FetchImages, setIsSearchValid } = useContext(ImagesContext);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleExploreClick = (e) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    localStorage.setItem("searchedData", "isFalse");
+    if (setIsSearchValid) {
+      setIsSearchValid(true);
+    }
+    if (FetchImages) {
+      FetchImages();
+    }
+
+    const scrollToGallery = () => {
+      const anchor = document.getElementById("gallery-anchor");
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 460, behavior: "smooth" });
+      }
+    };
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(scrollToGallery, 120);
+      setTimeout(scrollToGallery, 350);
+    } else {
+      scrollToGallery();
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,9 +73,7 @@ const Header = () => {
           {/* Logo */}
           <NavLink
             to="/"
-            onClick={() => {
-              localStorage.setItem("searchedData", "isFalse");
-            }}
+            onClick={handleExploreClick}
             className="flex-shrink-0"
           >
             <CameraLogo />
@@ -56,7 +88,7 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3">
             <NavLink
               to="/"
-              onClick={() => localStorage.setItem("searchedData", "isFalse")}
+              onClick={handleExploreClick}
               className={({ isActive }) =>
                 `px-3.5 py-2 text-sm font-medium rounded-full transition-colors ${
                   isActive
@@ -142,7 +174,11 @@ const Header = () => {
       </header>
 
       {/* Mobile Slide-over Drawer */}
-      <SidebarModal isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+      <SidebarModal
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        onExplore={handleExploreClick}
+      />
     </>
   );
 };

@@ -83,6 +83,7 @@ function SignUp() {
     try {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -90,20 +91,27 @@ function SignUp() {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        await setDoc(docRef, {
-          name: user.displayName || "Studio Member",
-          email: user.email,
-          timestamp: serverTimestamp(),
-          likedImages: [],
-          likedImageIds: [],
-          isAdmin: false,
-        });
+        await setDoc(
+          docRef,
+          {
+            name: user.displayName || user.email?.split("@")[0] || "Studio Member",
+            email: user.email || "",
+            timestamp: serverTimestamp(),
+            likedImages: [],
+            likedImageIds: [],
+            isAdmin: false,
+          },
+          { merge: true }
+        );
       }
 
-      toast.success(`Welcome to Lumina Studio, ${user.displayName}! 🎉`, { theme: "dark" });
+      toast.success(`Welcome to Lumina Studio, ${user.displayName || "Creator"}! 🎉`, { theme: "dark" });
       navigate("/");
     } catch (error) {
-      toast.error("Google sign-up failed. Please try again.", { theme: "dark" });
+      console.error("Google Signup error:", error);
+      if (error.code !== "auth/popup-closed-by-user") {
+        toast.error("Google sign-up failed. Please try again.", { theme: "dark" });
+      }
     }
   }
 

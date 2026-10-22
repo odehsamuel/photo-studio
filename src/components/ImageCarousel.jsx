@@ -13,12 +13,39 @@ const CATEGORIES = [
   { name: "Travel", query: "travel landscape", icon: "✈️" },
 ];
 
+const DEFAULT_HERO_SLIDES = [
+  {
+    id: "hero_mountains",
+    largeImageURL:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85",
+    webformatURL:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "hero_starry_night",
+    largeImageURL:
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=85",
+    webformatURL:
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "hero_aurora",
+    largeImageURL:
+      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=2000&q=85",
+    webformatURL:
+      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+  },
+];
+
 function ImageCarousel() {
   const { images, SearchImage, FetchImages } = useContext(ImagesContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const carouselItems = images && images.length > 0 ? images.slice(0, 5) : [];
+  const carouselItems =
+    images && images.length > 0 ? images.slice(0, 5) : DEFAULT_HERO_SLIDES;
+
+  const safeIndex = carouselItems.length > 0 ? currentIndex % carouselItems.length : 0;
 
   // Auto-slide every 6 seconds
   useEffect(() => {
@@ -45,34 +72,39 @@ function ImageCarousel() {
     }
   };
 
-  if (!carouselItems || carouselItems.length === 0) {
-    return (
-      <div className="relative pt-24 pb-12 px-4 max-w-7xl mx-auto text-center">
-        <div className="h-72 rounded-3xl bg-slate-900 animate-pulse border border-slate-800"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="relative pt-24 sm:pt-28 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Hero Banner Container */}
-      <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-        {/* Background Image with smooth transition */}
-        <div className="absolute inset-0 bg-slate-950">
-          {carouselItems.map((item, idx) => (
-            <img
-              key={item.id || idx}
-              src={item.largeImageURL || item.webformatURL}
-              alt="Curated Background"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-                idx === currentIndex ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
-              }`}
-            />
-          ))}
-          {/* Multi-layer gradient overlays for readability and luxury feel */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/40 to-transparent" />
+      <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-slate-900">
+        {/* Instant Base Hero Image so there is NEVER a blank or missing image on refresh */}
+        <img
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
+          alt="Lumina Hero Wallpaper"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+
+        {/* Carousel Background Images with smooth cross-fade */}
+        <div className="absolute inset-0">
+          {carouselItems.map((item, idx) => {
+            const src = item.largeImageURL || item.webformatURL;
+            if (!src) return null;
+            return (
+              <img
+                key={item.id || idx}
+                src={src}
+                alt="Curated Background"
+                loading={idx === 0 ? "eager" : "lazy"}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+                  idx === safeIndex ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+                }`}
+              />
+            );
+          })}
         </div>
+        {/* Multi-layer gradient overlays for readability and luxury feel */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none" />
 
         {/* Hero Content */}
         <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-10 lg:p-14 max-w-2xl">

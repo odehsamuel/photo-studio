@@ -19,7 +19,6 @@ const Image = ({ image }) => {
   const [isLiking, setIsLiking] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -107,21 +106,17 @@ const Image = ({ image }) => {
       <div className="group relative w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800/80 hover:border-slate-700 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
         {/* Image Container with Zoom */}
         <div className="relative aspect-[4/5] sm:aspect-square md:aspect-[4/5] w-full overflow-hidden bg-slate-950">
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-slate-800/60 animate-pulse flex items-center justify-center">
-              <div className="w-8 h-8 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
-            </div>
-          )}
-
           <Link to={`/image-preview/${encodeURIComponent(tags || "wallpaper")}/${id}`} className="block w-full h-full">
             <img
               src={webformatURL || previewURL}
               alt={tagList[0] || "Curated wallpaper"}
               loading="lazy"
-              onLoad={() => setImageLoaded(true)}
-              className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
-              }`}
+              decoding="async"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80";
+              }}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </Link>
 

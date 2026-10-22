@@ -2,12 +2,17 @@ import { Link } from "react-router-dom";
 import { useAuthStatus } from "./hooks/useAuthStatus";
 import { getAuth } from "firebase/auth";
 
-const SidebarModal = ({ isOpen, onClose }) => {
+const SidebarModal = ({ isOpen, onClose, onExplore }) => {
   const { loggedIn, handleClick } = useAuthStatus();
   const auth = getAuth();
   const user = auth.currentUser;
 
   if (!isOpen) return null;
+
+  const handleExplore = () => {
+    if (onExplore) onExplore();
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden md:hidden">
@@ -54,7 +59,7 @@ const SidebarModal = ({ isOpen, onClose }) => {
             <nav className="mt-6 flex flex-col gap-2">
               <Link
                 to="/"
-                onClick={onClose}
+                onClick={handleExplore}
                 className="flex items-center gap-3 px-4 py-3 text-slate-200 hover:text-white hover:bg-slate-800/80 rounded-xl font-medium transition-colors"
               >
                 <i className="fa fa-compass text-emerald-400 w-5"></i>

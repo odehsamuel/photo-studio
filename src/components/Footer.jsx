@@ -16,7 +16,7 @@ const Footer = () => {
               Lumina Photo Studio is a modern visual discovery platform delivering curated 4K wallpapers and photography for creatives worldwide.
             </p>
             <div className="flex items-center gap-3 mt-6">
-              {["github", "twitter", "instagram", "dribbble"].map((icon) => (
+              {["github", "twitter", "instagram"].map((icon) => (
                 <a
                   key={icon}
                   href={`https://${icon}.com`}

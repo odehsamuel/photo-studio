@@ -11,7 +11,8 @@ function ForgottenPassword() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!email) {
+    const cleanEmail = email ? email.trim().toLowerCase() : "";
+    if (!cleanEmail) {
       toast.error("Please enter your registered email address", { theme: "dark" });
       return;
     }
@@ -19,11 +20,23 @@ function ForgottenPassword() {
     setIsLoading(true);
     try {
       const auth = getAuth();
-      await sendPasswordResetEmail(auth, email);
-      toast.success("Password reset instructions sent to your email! ✉️", { theme: "dark" });
+      await sendPasswordResetEmail(auth, cleanEmail);
+      toast.success("Password reset link sent! Check your inbox and spam folder. ✉️", {
+        theme: "dark",
+        autoClose: 4000,
+      });
       setEmail("");
     } catch (error) {
-      toast.error("Could not find an account with that email address", { theme: "dark" });
+      console.error("Password reset error:", error);
+      if (error.code === "auth/user-not-found") {
+        toast.error("No account exists with this email. Please sign up first.", { theme: "dark" });
+      } else if (error.code === "auth/invalid-email") {
+        toast.error("Please enter a valid email address.", { theme: "dark" });
+      } else if (error.code === "auth/too-many-requests") {
+        toast.error("Too many reset requests. Please wait a moment and try again.", { theme: "dark" });
+      } else {
+        toast.error(error.message || "Failed to send reset email. Please check your network.", { theme: "dark" });
+      }
     } finally {
       setIsLoading(false);
     }

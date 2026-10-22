@@ -3,13 +3,10 @@ import Footer from "../Footer";
 import Header from "../Header";
 import ImageCarousel from "../ImageCarousel";
 import ImageList from "../ImageList";
-import { Loader } from "../Mode/Loader";
-import { useAuthStatus } from "../hooks/useAuthStatus";
 import ImagesContext from "../../context/ImagesContext/ImagesContext";
 
 function Home() {
   const { isSearchValid, FetchImages } = useContext(ImagesContext);
-  const { isLoading } = useAuthStatus();
 
   useEffect(() => {
     // Keep searchedData or reset if navigating fresh
@@ -18,17 +15,6 @@ function Home() {
       localStorage.setItem("searchedData", "isFalse");
     }
   }, []);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
-        <Loader fill="#10b981" />
-        <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
-          Entering Lumina Studio...
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
